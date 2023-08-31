@@ -1,7 +1,9 @@
 import { MouseEventHandler } from "react";
 import "./Nav.scss";
 
-export default function Nav(props) {
+export default function Nav(props: {
+  toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
+}) {
   const rarities = {
     commun: "#A4B0BE",
     uncommun: "#1CBF6A",

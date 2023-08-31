@@ -1,6 +1,9 @@
+import { MouseEventHandler } from "react";
 import "./ExtendedNav.scss";
 
-export default function ExtendedNav(props) {
+export default function ExtendedNav(props: {
+  toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
+}) {
   const rarities = {
     commun: "#A4B0BE",
     uncommun: "#1CBF6A",
@@ -37,7 +40,7 @@ export default function ExtendedNav(props) {
         <ul>
           {Object.entries(rarities)
             .slice(0, 5)
-            .map(([rarity, color], i) => (
+            .map(([rarity, color]) => (
               <li key={rarity} style={{ borderColor: color, color: color }}>
                 <p>{rarity}</p>
                 <div className="svg"></div>
