@@ -1,0 +1,84 @@
+.nav__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-image: linear-gradient(45deg,
+      rgba(187, 187, 187, 0.04) 0%,
+      rgba(187, 187, 187, 0.04) 50%,
+      rgba(86, 86, 86, 0.04) 50%,
+      rgba(86, 86, 86, 0.04) 100%),
+    linear-gradient(135deg,
+      rgba(166, 166, 166, 0.04) 0%,
+      rgba(166, 166, 166, 0.04) 50%,
+      rgba(92, 92, 92, 0.04) 50%,
+      rgba(92, 92, 92, 0.04) 100%),
+    linear-gradient(90deg, rgb(92, 22, 197), rgb(92, 22, 197));
+  background-size: 142px 142px;
+  gap: 2rem;
+  font-weight: bolder;
+  padding-inline: 1rem;
+}
+
+.nav__header {
+  flex: 1;
+  gap: 1rem;
+  padding-top: 5vw;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  align-items: center;
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.fullScreen--btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inventory {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  gap: .5rem;
+}
+
+.floorPriceInventory {
+  color: rgb(255, 208, 0);
+  font-size: 1.2rem;
+}
+
+.nav__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.nav__body::before {
+  content: "";
+  border-radius: 100px;
+  height: 5px;
+  width: 80%;
+  margin: 0 auto;
+  background-color: rgb(211, 211, 211);
+  margin-bottom: 1rem;
+}
+
+.rarity__wrapper {
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
