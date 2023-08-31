@@ -1,5 +1,4 @@
 .nav__wrapper {
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -20,6 +19,7 @@
   padding-inline: 1rem;
   -webkit-box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
   box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
+  overflow: hidden;
 }
 
 .nav__header {

@@ -8,10 +8,15 @@
 
 #root::-webkit-scrollbar {
   width: 5px !important;
-  background-color: rgb(231, 231, 231);
+  background-color: rgb(92, 22, 197);
+}
+
+#root::-webkit-scrollbar-track,
+#root::-scr {
+  background-color: transparent !important;
 }
 
 #root::-webkit-scrollbar-thumb {
-  background-color: rgb(187, 187, 187) !important;
+  background-color: rgb(138, 73, 236) !important;
   border-radius: 500px !important;
 }
