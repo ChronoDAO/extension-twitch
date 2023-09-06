@@ -8,9 +8,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: "src/main.tsx",
         video_overlay: "video_overlay.html",
-        config: "config.html",
       },
       output: {
         dir: "dist",
