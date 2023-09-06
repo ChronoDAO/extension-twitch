@@ -1,4 +1,14 @@
+.nav__wrapper:hover {
+  transform: translateX(0%);
+  transition: .4s ease;
+  filter: brightness(1) opacity(1);
+}
+
 .nav__wrapper {
+  filter: brightness(.5) opacity(.5);
+
+  transform: translateX(86%);
+  transition: .5s ease;
   display: flex;
   flex-direction: column;
   height: 100%;

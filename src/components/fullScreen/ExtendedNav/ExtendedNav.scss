@@ -1,0 +1,298 @@
+.extendedNav__wrapper {
+  padding: 1rem;
+  min-height: 100%;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-image: linear-gradient(45deg,
+      rgba(187, 187, 187, 0.04) 0%,
+      rgba(187, 187, 187, 0.04) 50%,
+      rgba(86, 86, 86, 0.04) 50%,
+      rgba(86, 86, 86, 0.04) 100%),
+    linear-gradient(135deg,
+      rgba(166, 166, 166, 0.04) 0%,
+      rgba(166, 166, 166, 0.04) 50%,
+      rgba(92, 92, 92, 0.04) 50%,
+      rgba(92, 92, 92, 0.04) 100%),
+    linear-gradient(90deg, rgb(92, 22, 197), rgb(92, 22, 197));
+  background-size: 200px 200px;
+  -webkit-box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
+  box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
+
+
+
+  button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+}
+
+.extendedNav__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    .inventory {
+      margin-right: 1rem;
+    }
+
+    .floorPriceInventory {
+      margin-left: 1rem;
+    }
+
+    .logo {
+      flex: 1;
+
+    }
+  }
+}
+
+.extendedNav__body {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
+  .rarity__ul {
+    display: flex;
+    justify-content: space-around;
+    gap: .5rem;
+
+    li {
+      cursor: pointer;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      border-radius: 5px;
+
+      button {
+        margin: .3rem .5rem;
+        padding-bottom: .1rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+      }
+    }
+
+
+  }
+}
+
+.separator {
+  border-radius: 100px;
+  height: 5px;
+  width: 70%;
+  margin: 0 auto;
+  background-color: rgb(223, 223, 223);
+  margin: 3rem auto;
+}
+
+.auto-grid {
+  --min-column-size: 10rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit,
+      minmax(min(var(--min-column-size), 100%), 1fr));
+
+  .no-result {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    p {
+
+      font-size: 1.2rem;
+      font-weight: bold;
+
+    }
+
+    button {
+      padding: 0.3rem 0.5rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border: 2px solid white;
+      width: fit-content;
+      color: white;
+      border-radius: .5rem;
+    }
+  }
+
+  div {
+    border-radius: 3%;
+    max-width: 250px;
+    position: relative;
+
+    .price {
+      font-size: 1.5rem;
+    }
+
+    div {
+
+      .NFTQuantity {
+        position: absolute;
+        left: 5%;
+        top: 5%;
+
+        p {
+
+          font-weight: bold;
+          font-size: 1rem;
+        }
+      }
+
+      .NFTIssuedId {
+        z-index: 1000;
+        bottom: 7%;
+        left: 5%;
+        position: absolute;
+
+        div {
+          display: flex;
+          max-height: 130px;
+          flex-wrap: wrap;
+          overflow: auto;
+          gap: .5rem;
+          margin: 0 .1rem;
+
+        }
+
+
+
+
+        button {
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        p {
+          border: 2px solid white;
+          padding: .2rem .5rem;
+          border-radius: 100px;
+          font-size: .7rem;
+          font-weight: 700;
+          line-height: 1;
+          cursor: pointer;
+        }
+
+      }
+    }
+
+    a {
+
+      img {
+
+        border: 3px solid;
+        border-radius: .5rem;
+        background-color: #040816;
+        aspect-ratio: 1/1;
+        width: 100%;
+        object-fit: contain;
+        transition: .2s ease;
+
+      }
+
+
+    }
+
+
+
+  }
+
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+
+  }
+
+
+
+  .common {
+
+    border-color: #A4B0BE
+  }
+
+  .uncommon {
+
+    border-color: #1CBF6A;
+
+  }
+
+  .rare {
+
+    border-color: #159CFD;
+
+  }
+
+  .epic {
+
+    border-color: #A369FF;
+
+  }
+
+  .legendary {
+
+    border-color: #E67E22;
+
+  }
+
+  .mythic {
+
+    border-color: #FFD32A;
+
+  }
+
+  .exalted {
+    border-color: #EF5777;
+  }
+
+  .exotic {
+
+    border-color: #FFEE00;
+
+  }
+
+  .transcendant {
+
+    border-color: #000000;
+
+  }
+
+  .unique {
+
+    border-color: #A24B72;
+
+  }
+
+
+}
+
+.active {
+  filter: brightness(.4);
+  transition: .2s ease;
+}
+
+.special_IssuedId {
+  background-color: blue;
+}
+
+.inactive {
+  display: none;
+}
