@@ -1,35 +1,27 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import "./Nav.scss";
 import { Nft } from "../../type";
+import rarities from "../../rarities";
 
 export default function Nav(props: {
   toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
   nfts: Nft;
+  userItems;
+  tresory;
+  tresoryStatus;
+  onTresoryStatusChange;
 }) {
-  const rarities = {
-    common: "#A4B0BE",
-    uncommon: "#1CBF6A",
-    rare: "#159CFD",
-    epic: "#A369FF",
-    legendary: "#E67E22",
-    mythic: "#FFD32A",
-    exalted: "#EF5777",
-    exotic: "#FFEE00",
-    transcendant: "#000000",
-    unique: "#A24B72",
-  };
+  console.log("G ETE RERENDER, JE SUIS LA NAV");
 
   const nfts = props.nfts;
 
-  let tresory = 0;
-  function getFloorPrice() {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    nfts.map((nft) => (tresory = tresory + nft.Item.floorPrice));
-    return tresory;
-  }
-  getFloorPrice();
-  console.log(tresory);
+  useEffect(() => {
+    props.onTresoryStatusChange(null);
+    setTest(true);
+    setTimeout(() => {
+      setTest(false);
+    }, 500);
+  }, [props.tresoryStatus, props.onTresoryStatusChange]);
 
   function groupNFTsByRarity(nfts) {
     const groupedNFTs: Record<
@@ -57,22 +49,33 @@ export default function Nav(props: {
   }
 
   const groupedNFTs = groupNFTsByRarity(nfts);
-  console.log(groupedNFTs);
+  const [test, setTest] = useState(false);
   return (
     <>
-      <div className="nav__wrapper">
+      <div className={test ? "nav__wrapper notification" : "nav__wrapper"}>
         <div className="nav__header">
           <div className="logo">
             <img src="/dao.png" width={"55px"} height={"auto"} alt="" />
           </div>
           <button onClick={props.toggleFullScreen} className="fullScreen--btn">
+            <span className="notification--btn">3</span>
             <img src="/see_more.svg" width={"45px"} alt="" />
           </button>
           <div className="inventory">
             <img src="/chest.svg" width={"32px"} alt="" />
             <p>{nfts.length}</p>
           </div>
-          <div className="floorPriceInventory">$ {Math.floor(tresory)}</div>
+          <div
+            className={
+              props.tresoryStatus === true
+                ? "floorPriceInventory increase"
+                : props.tresoryStatus === false
+                ? "floorPriceInventory decrease"
+                : "floorPriceInventory default"
+            }
+          >
+            $ {Math.floor(props.tresory)}
+          </div>
         </div>
         <div className="nav__body">
           <div className="rarity__wrapper">

@@ -1,0 +1,187 @@
+import React, { useEffect, useState } from "react";
+import Test1 from "./components/fullScreen/ExtendedNav/Test1";
+import { createClient } from "@supabase/supabase-js";
+import NFT from "./components/fullScreen/ExtendedNav/components/NFT";
+
+const supabase = createClient(
+  "https://naiscprlenbohhfjhyhi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5haXNjcHJsZW5ib2hoZmpoeWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE0ODc1MTMsImV4cCI6MjAwNzA2MzUxM30.fdTr5Iu8OaCTcn5Fb0IVdoh0P2YZ_VcgcYefVnG8EXI"
+);
+export default function App() {
+  const [userData, setUserData] = useState();
+  const [userNfts, setUserNfts] = useState();
+  const [userItems, setUserItems] = useState();
+  const [items, setItems] = useState();
+  const [newItem, setNewItem] = useState();
+  const [, setForceRerender] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("User")
+        .select("*, NFT(*, Item(*))")
+        .eq("name", "Zet");
+      if (error) {
+        throw error;
+      }
+
+      setUserData(data[0]);
+      const userNfts = data[0]?.NFT || [];
+      const uniqueItemIds = [];
+      const uniqueItems = userNfts.filter((item) => {
+        if (uniqueItemIds.includes(item.Item.archetypeId)) {
+          return false;
+        }
+        uniqueItemIds.push(item.Item.archetypeId);
+        return true;
+      });
+      setUserItems(uniqueItems);
+    } catch (error) {
+      console.error("Erreur lors de la requête initiale :", error.message);
+    }
+  };
+
+  const subscribeToItemChanges = () => {
+    const subscription = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "Item",
+        },
+        (payload) => {
+          const updatedItem = payload.new;
+          setUserItems((prevItems) => {
+            const indexToUpdate = prevItems.findIndex(
+              (item) => item.Item.archetypeId === updatedItem.archetypeId
+            );
+            console.log(indexToUpdate);
+
+            if (indexToUpdate !== -1) {
+              const updatedUserItems = [...prevItems];
+              updatedUserItems[indexToUpdate].Item = updatedItem;
+              return updatedUserItems;
+            }
+
+            return prevItems;
+          });
+          setForceRerender((prev) => !prev);
+        }
+      )
+      .subscribe();
+
+    return subscription;
+  };
+
+  useEffect(() => {
+    fetchData();
+    const subscription = subscribeToItemChanges();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  return (
+    <>
+      {userItems &&
+        userItems.map((item) => (
+          <div key={item.Item.archetypeId}>
+            <p>{item.Item.archetypeId}</p>
+            <p>Floor Price: {item.Item.floorPrice}</p>
+          </div>
+        ))}
+    </>
+  );
+}
+
+import { useEffect, useState } from "react";
+import "./App.css";
+import ExtendedNav from "./components/fullScreen/ExtendedNav/ExtendedNav";
+import Nav from "./components/fullScreen/Nav";
+import { Data, Nft, ApiRequest } from "./type";
+import { createClient } from "@supabase/supabase-js";
+import { useGroupNFTsByName } from "./customHooks/useGroupNFTsByName";
+
+const supabase = createClient(
+  "https://naiscprlenbohhfjhyhi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5haXNjcHJsZW5ib2hoZmpoeWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE0ODc1MTMsImV4cCI6MjAwNzA2MzUxM30.fdTr5Iu8OaCTcn5Fb0IVdoh0P2YZ_VcgcYefVnG8EXI"
+);
+
+function App() {
+  const [isNavFullScreen, setIsNavFullScreen] = useState(true);
+  const [isExtendedNavFullScreen, setIsExtendedNavFullScreen] = useState(false);
+  const [data, setData] = useState<Data | undefined>();
+  const [nfts, setNfts] = useState<Nft | undefined>();
+  const [items, setItems] = useState();
+  const [newItem, setNewItem] = useState();
+  const [userItems, setUserItems] = useState();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data, error } = await supabase
+          .from("User")
+          .select("*, NFT(*, Item(*))")
+          .eq("name", "Zet");
+
+        if (error) {
+          throw error;
+        }
+        setData(data);
+        data !== undefined && setNfts(data[0].NFT);
+      } catch (error) {
+        console.error("Erreur lors de la requête initiale :", error.message);
+      }
+    }
+
+    fetchData();
+
+    const handleItemUpdate = (payload) => {
+      setNewItem(payload.new);
+    };
+
+    const subscription = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "Item",
+        },
+        handleItemUpdate
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const toggleFullScreen = () => {
+    setIsNavFullScreen(!isNavFullScreen);
+    setIsExtendedNavFullScreen(!isExtendedNavFullScreen);
+  };
+  return (
+    <>
+      {/* {data ? (
+        <div className="app">
+          {isNavFullScreen ? (
+            <Nav toggleFullScreen={toggleFullScreen} nfts={nfts} />
+          ) : (
+            <ExtendedNav
+              toggleFullScreen={toggleFullScreen}
+              data={data}
+              nfts={nfts}
+              newItem={newItem}
+            />
+          )}
+        </div>
+      ) : null} */}
+    </>
+  );
+}
+
+export default App;

@@ -6,6 +6,7 @@ export type Data = {
 };
 
 export type Nft = {
+  map(arg0: (nft: unknown) => void): unknown;
   length: ReactNode;
   Item: Item;
   archetypeId: string;
@@ -19,4 +20,9 @@ export type Item = {
   name: string;
   imageUrl: string;
   rarityName: string;
+};
+
+export type ApiRequest = {
+  data: object;
+  error: object;
 };

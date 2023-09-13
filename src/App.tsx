@@ -2,57 +2,157 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import ExtendedNav from "./components/fullScreen/ExtendedNav/ExtendedNav";
 import Nav from "./components/fullScreen/Nav";
-import axios from "axios";
-import { Data, Nft } from "./type";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://naiscprlenbohhfjhyhi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5haXNjcHJsZW5ib2hoZmpoeWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE0ODc1MTMsImV4cCI6MjAwNzA2MzUxM30.fdTr5Iu8OaCTcn5Fb0IVdoh0P2YZ_VcgcYefVnG8EXI"
+);
 
 function App() {
   const [isNavFullScreen, setIsNavFullScreen] = useState(true);
-  const [isExtendedNavFullScreen, setIsExtendedNavFullScreen] = useState(false);
-  const [data, setData] = useState<Data | undefined>();
-  const [nfts, setNfts] = useState<Nft | undefined>();
+  const [userData, setUserData] = useState(null);
+  const [userNfts, setUserNfts] = useState([]);
+  const [userItems, setUserItems] = useState([]);
+  const [newItem, setNewItem] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://naiscprlenbohhfjhyhi.supabase.co/rest/v1/User?select=*,NFT(*,Item(*))&name=eq.Zet `,
+    const fetchData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("User")
+          .select("*, NFT(*, Item(*))")
+          .eq("name", "Zet");
+        if (error) {
+          throw error;
+        }
+        setUserData(data[0]);
+      } catch (error) {
+        console.error("Erreur lors de la requête initiale :", error.message);
+      }
+    };
+
+    fetchData();
+
+    const subscription = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
         {
-          headers: {
-            apikey:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5haXNjcHJsZW5ib2hoZmpoeWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE0ODc1MTMsImV4cCI6MjAwNzA2MzUxM30.fdTr5Iu8OaCTcn5Fb0IVdoh0P2YZ_VcgcYefVnG8EXI",
-          },
+          event: "*",
+          schema: "public",
+          table: "Item",
+        },
+        (payload) => {
+          const updatedItem = payload.new;
+          setUserItems((prevItems) => {
+            const indexToUpdate = prevItems.findIndex(
+              (item) => item.Item.archetypeId === updatedItem.archetypeId
+            );
+
+            if (indexToUpdate !== -1) {
+              const updatedUserItems = [...prevItems];
+              updatedUserItems[indexToUpdate].Item = updatedItem;
+              return updatedUserItems;
+            }
+
+            return prevItems;
+          });
         }
       )
+      .subscribe();
 
-      .then((responseData) => {
-        const newData = responseData.data;
-        setData(newData);
-        if (newData && newData.length > 0) {
-          setNfts(newData[0].NFT);
-        }
-      });
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      setUserNfts(userData.NFT);
+      const uniqueItemIds = [];
+      const uniqueItems = userData.NFT.filter((item) => {
+        if (uniqueItemIds.includes(item.Item.archetypeId)) {
+          setNewItem(uniqueItemIds);
+          return false;
+        }
+        uniqueItemIds.push(item.Item.archetypeId);
+        return true;
+      });
+
+      setUserItems(uniqueItems);
+    }
+  }, [userData]);
+
   const toggleFullScreen = () => {
-    setIsNavFullScreen(!isNavFullScreen);
-    setIsExtendedNavFullScreen(!isExtendedNavFullScreen);
+    setIsNavFullScreen((prev) => !prev);
   };
 
+  const [tresory, setTresory] = useState(0);
+  const [previousTresory, setPreviousTresory] = useState(0);
+  const [tresoryStatus, setTresoryStatus] = useState(null);
+
+  useEffect(() => {
+    let a = 0;
+    for (const nft of userNfts) {
+      a = a + nft.Item.floorPrice;
+    }
+    setTresory(a);
+    setPreviousTresory(tresory);
+  }, [userNfts, userItems, tresory]);
+
+  useEffect(() => {
+    if (tresory > previousTresory) {
+      console.log("La trésorerie a augmenté");
+      setTresoryStatus(true);
+    } else if (tresory < previousTresory) {
+      console.log("La trésorerie a diminué");
+      setTresoryStatus(false);
+    }
+  }, [tresory, previousTresory]);
+
+  function sortByPrice() {
+    userItems.sort(function (a, b) {
+      return b.Item.floorPrice - a.Item.floorPrice;
+    });
+  }
+
+  const handleTresoryStatusChange = (newTresoryStatus) => {
+    setTimeout(() => {
+      setTresoryStatus(newTresoryStatus);
+    }, 2500);
+  };
+
+  if (!userData || !userNfts || !userItems) {
+    return null;
+  } else {
+    sortByPrice();
+  }
+
   return (
-    <>
-      {data ? (
-        <div className="app">
-          {isNavFullScreen ? (
-            <Nav toggleFullScreen={toggleFullScreen} nfts={nfts} />
-          ) : (
-            <ExtendedNav
-              toggleFullScreen={toggleFullScreen}
-              data={data}
-              nfts={nfts}
-            />
-          )}
-        </div>
-      ) : null}
-    </>
+    <div className="app">
+      {isNavFullScreen ? (
+        <Nav
+          toggleFullScreen={toggleFullScreen}
+          nfts={userNfts}
+          userItems={userItems}
+          tresory={tresory}
+          tresoryStatus={tresoryStatus}
+          onTresoryStatusChange={handleTresoryStatusChange}
+        />
+      ) : (
+        <ExtendedNav
+          toggleFullScreen={toggleFullScreen}
+          data={userData}
+          nfts={userNfts}
+          newItem={newItem}
+          userItems={userItems}
+          tresory={tresory}
+          tresoryStatus={tresoryStatus}
+          onTresoryStatusChange={handleTresoryStatusChange}
+        />
+      )}
+    </div>
   );
 }
 

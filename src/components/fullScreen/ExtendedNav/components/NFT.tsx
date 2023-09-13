@@ -1,54 +1,52 @@
 import { useToggleShowMore } from "../../../../customHooks/useToggleShowMore";
 
-export default function NFT({ groupedNFT }) {
+export default function NFT({ userItem }) {
   const { showMoreMap, toggleShowMore } = useToggleShowMore();
 
   return (
     <div>
       <div>
         <a
-          key={groupedNFT.nft[0].id} // Utilisez une clé unique pour l'élément généré
-          href={`https://openloot.com/items/BT0/${groupedNFT.nft[0].Item.optionName}`}
+          key={userItem.id}
+          href={`https://openloot.com/items/BT0/${userItem.Item.optionName}`}
           target="_blank"
         >
           <img
-            src={groupedNFT.nft[0].Item.imageUrl}
+            src={userItem.Item.imageUrl}
             alt=""
             className={
-              !showMoreMap[groupedNFT.nft[0].id]
-                ? groupedNFT.nft[0].Item.rarityName
-                : "active"
+              !showMoreMap[userItem.id] ? userItem.Item.rarityName : "active"
             }
           />
         </a>
         <span className="NFTQuantity">
-          <p>X {groupedNFT.count}</p>
+          <p>X {userItem.count}</p>
         </span>
         <span className="NFTIssuedId">
-          {groupedNFT.count > 1 ? (
+          {userItem.count > 1 ? (
             <div className="issueId__container">
-              {!showMoreMap[groupedNFT.nft[0].id] ? (
-                <button onClick={() => toggleShowMore(groupedNFT.nft[0].id)}>
+              {!showMoreMap[userItem.id] ? (
+                <button onClick={() => toggleShowMore(userItem.id)}>
                   <img src="/see_more.svg" width={"18px"} alt="" />
                 </button>
               ) : (
-                <button onClick={() => toggleShowMore(groupedNFT.nft[0].id)}>
+                <button onClick={() => toggleShowMore(userItem.id)}>
                   <img src="/see_less.svg" width={"18px"} alt="" />
                 </button>
               )}
-              {showMoreMap[groupedNFT.nft[0].id] ? (
-                groupedNFT.nft.map((nft) => <p>{nft.issuedId}</p>)
+              {showMoreMap[userItem.id] ? (
+                userItem.nft.map((nft) => <p>{nft.issuedId}</p>)
               ) : (
-                <p># {groupedNFT.nft[0].issuedId}</p>
+                <p># {userItem.issuedId}</p>
               )}
             </div>
           ) : (
-            <p># {groupedNFT.nft[0].issuedId}</p>
+            <p># {userItem.issuedId}</p>
           )}
         </span>
       </div>
-      <p>{groupedNFT.nft[0].Item.name}</p>
-      <p className="price">${groupedNFT.nft[0].Item.floorPrice}</p>
+      <p>{userItem.Item.name}</p>
+      <p className="price">${userItem.Item.floorPrice}</p>
     </div>
   );
 }

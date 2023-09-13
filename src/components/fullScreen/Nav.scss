@@ -45,6 +45,19 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
+    position: relative;
+
+    span {
+      position: absolute;
+      background-color: red;
+      width: 20px;
+      aspect-ratio: 1/1;
+      color: white;
+      border-radius: 50%;
+      font-weight: bolder;
+      top: -5%;
+      right: -10%;
+    }
   }
 }
 
@@ -93,5 +106,53 @@
       display: flex;
       justify-content: space-between;
     }
+  }
+}
+
+.notification {
+  animation: slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+// @-webkit-keyframes slide-left {
+//   0% {
+//     -webkit-transform: translateX(0);
+//     transform: translateX(0);
+//   }
+
+//   100% {
+//     -webkit-transform: translateX(-100px);
+//     transform: translateX(-100px);
+//   }
+// }
+
+@keyframes slide-left {
+  0% {
+
+    transform: translateX(86%);
+  }
+
+  25% {
+    transform: translateX(70%);
+  }
+
+  50% {
+    transform: translateX(86%);
+  }
+
+  75% {
+    transform: translateX(70%);
+  }
+
+  80% {
+    transform: translateX(86%);
+  }
+
+  90% {
+    transform: translateX(80%);
+  }
+
+  100% {
+
+    transform: translateX(86%);
   }
 }
