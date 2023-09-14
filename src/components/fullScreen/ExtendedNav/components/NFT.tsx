@@ -12,7 +12,7 @@ export default function NFT({ userItem }) {
           target="_blank"
         >
           <img
-            src={userItem.Item.imageUrl}
+            src=""
             alt=""
             className={
               !showMoreMap[userItem.id] ? userItem.Item.rarityName : "active"
@@ -31,7 +31,7 @@ export default function NFT({ userItem }) {
                 </button>
               ) : (
                 <button onClick={() => toggleShowMore(userItem.id)}>
-                  <img src="/see_less.svg" width={"18px"} alt="" />
+                <img src="/see_less.svg" width={"18px"} alt="" />
                 </button>
               )}
               {showMoreMap[userItem.id] ? (

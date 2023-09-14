@@ -45,6 +45,7 @@ function App() {
         },
         (payload) => {
           const updatedItem = payload.new;
+          setNewItem(updatedItem)
           setUserItems((prevItems) => {
             const indexToUpdate = prevItems.findIndex(
               (item) => item.Item.archetypeId === updatedItem.archetypeId
@@ -73,7 +74,6 @@ function App() {
       const uniqueItemIds = [];
       const uniqueItems = userData.NFT.filter((item) => {
         if (uniqueItemIds.includes(item.Item.archetypeId)) {
-          setNewItem(uniqueItemIds);
           return false;
         }
         uniqueItemIds.push(item.Item.archetypeId);
@@ -117,6 +117,23 @@ function App() {
     });
   }
 
+  const [updatedItems, setUpdatedItems] = useState([])
+
+  useEffect(() => {
+    if (newItem !== null) {
+      console.log(newItem)
+      const index = updatedItems.findIndex(item => item.archetypeId === newItem.archetypeId);
+      if (index !== -1) {
+        const updatedItemsCopy = [...updatedItems];
+        updatedItemsCopy[index] = newItem;
+        setUpdatedItems(updatedItemsCopy);
+      } else {
+        setUpdatedItems((prevUpdatedItems) => [...prevUpdatedItems, newItem]);
+      }
+    }
+  }, [newItem]) 
+
+
   const handleTresoryStatusChange = (newTresoryStatus) => {
     setTimeout(() => {
       setTresoryStatus(newTresoryStatus);
@@ -146,6 +163,7 @@ function App() {
           data={userData}
           nfts={userNfts}
           newItem={newItem}
+          updatedItems={updatedItems}
           userItems={userItems}
           tresory={tresory}
           tresoryStatus={tresoryStatus}

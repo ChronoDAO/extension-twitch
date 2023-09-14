@@ -3,6 +3,8 @@ import "./ExtendedNav.scss";
 import Rarity from "./components/Rarity";
 import NFT from "./components/NFT";
 import { Data, Nft } from "../../../type";
+import UpdatedDrop from "./components/UpdatedDrop";
+import UpdatedItem from "./components/UpdatedItem";
 
 export default function ExtendedNav(props: {
   toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
@@ -13,6 +15,7 @@ export default function ExtendedNav(props: {
   tresory;
   tresoryStatus;
   onTresoryStatusChange;
+  updatedItems
 }) {
   const [rarity, setRarity] = useState<string>("");
 
@@ -65,6 +68,8 @@ export default function ExtendedNav(props: {
 
         <div className="extendedNav__body">
           <Rarity fromChild={handleCallBack} />
+          <span className="separator"></span>
+          <UpdatedItem updatedItem={props.newItem} updatedItems={props.updatedItems}/>
           <span className="separator"></span>
           <div className="auto-grid">
             {rarity === ""
