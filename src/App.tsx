@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import ExtendedNav from "./components/fullScreen/ExtendedNav/ExtendedNav";
 import Nav from "./components/fullScreen/Nav";
@@ -16,17 +16,6 @@ function App() {
   const [userItems, setUserItems] = useState([]);
   const [newItems, setNewItems] = useState([]);
   const [notification, setNotification] = useState(0);
-
-  const toggleFullScreen = useCallback(() => {
-    setIsNavFullScreen((prev) => !prev);
-  }, []);
-
-  const [tresoryData, setTresoryData] = useState({
-    tresory: 0,
-    previousTresory: 0,
-    tresoryStatus: null,
-    difference: 0,
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,39 +102,32 @@ function App() {
     }
   }, [userData]);
 
+  const toggleFullScreen = () => {
+    setIsNavFullScreen((prev) => !prev);
+  };
+
   const [tresory, setTresory] = useState(0);
   const [previousTresory, setPreviousTresory] = useState(0);
   const [tresoryStatus, setTresoryStatus] = useState(null);
   const [difference, setDifference] = useState(0);
-
-  console.log(tresory, previousTresory);
 
   useEffect(() => {
     let a = 0;
     for (const nft of userNfts) {
       a = a + nft.Item.floorPrice;
     }
-    setTresoryData((prevState) => ({
-      ...prevState,
-      tresory: a,
-      difference: a - prevState.previousTresory,
-      previousTresory: prevState.tresory,
-    }));
-  }, [userNfts]);
+    setTresory(a);
+    setDifference(tresory - previousTresory);
+    setPreviousTresory(tresory);
+  }, [userNfts, userItems, tresory, previousTresory]);
 
   useEffect(() => {
-    if (tresoryData.tresory > tresoryData.previousTresory) {
-      setTresoryData((prevState) => ({
-        ...prevState,
-        tresoryStatus: true,
-      }));
-    } else if (tresoryData.tresory < tresoryData.previousTresory) {
-      setTresoryData((prevState) => ({
-        ...prevState,
-        tresoryStatus: false,
-      }));
+    if (tresory > previousTresory) {
+      setTresoryStatus(true);
+    } else if (tresory < previousTresory) {
+      setTresoryStatus(false);
     }
-  }, []);
+  }, [tresory, previousTresory]);
 
   function sortByPrice() {
     userItems.sort(function (a, b) {
@@ -155,10 +137,7 @@ function App() {
 
   const handleTresoryStatusChange = (newTresoryStatus) => {
     setTimeout(() => {
-      setTresoryData((prevState) => ({
-        ...prevState,
-        tresoryStatus: newTresoryStatus,
-      }));
+      setTresoryStatus(newTresoryStatus);
     }, 2500);
   };
 
@@ -168,25 +147,19 @@ function App() {
     sortByPrice();
   }
 
-  console.log("RENDER APP");
   return (
     <div className="app">
-      <Nav
-        toggleFullScreen={toggleFullScreen}
-        nfts={userNfts}
-        userItems={userItems}
-        newItems={newItems}
-        notification={notification}
-        tresoryData={tresoryData}
-      />
-      {/* {isNavFullScreen ? (
+      {isNavFullScreen ? (
         <Nav
           toggleFullScreen={toggleFullScreen}
           nfts={userNfts}
           userItems={userItems}
+          tresory={tresory}
+          tresoryStatus={tresoryStatus}
+          onTresoryStatusChange={handleTresoryStatusChange}
           newItems={newItems}
           notification={notification}
-          tresoryData={tresoryData}
+          previousTresory={previousTresory}
         />
       ) : (
         <ExtendedNav
@@ -201,7 +174,7 @@ function App() {
           previousTresory={previousTresory}
           difference={difference}
         />
-      )} */}
+      )}
     </div>
   );
 }

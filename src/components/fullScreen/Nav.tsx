@@ -9,21 +9,21 @@ export default function Nav(props: {
   toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
   nfts: Nft;
   userItems;
-  tresoryData;
+  tresory;
+  tresoryStatus;
+  onTresoryStatusChange;
+  newItems;
+  previousTresory;
 }) {
   const nfts = props.nfts;
 
-  console.log("====================================");
-  console.log(props.tresoryData);
-  console.log("====================================");
-
-  // useEffect(() => {
-  //   // props.onTresoryStatusChange(null);
-  //   setTest(true);
-  //   setTimeout(() => {
-  //     setTest(false);
-  //   }, 500);
-  // }, [props]);
+  useEffect(() => {
+    props.onTresoryStatusChange(null);
+    setTest(true);
+    setTimeout(() => {
+      setTest(false);
+    }, 500);
+  }, [props]);
 
   function groupNFTsByRarity(nfts) {
     const groupedNFTs: Record<
@@ -50,7 +50,6 @@ export default function Nav(props: {
     return Object.values(groupedNFTs);
   }
 
-  console.log("RENDER NAVBAR");
   const groupedNFTs = groupNFTsByRarity(nfts);
   const [test, setTest] = useState(null);
   return (
@@ -60,12 +59,12 @@ export default function Nav(props: {
           <div className="logo">
             <img src="/dao.png" width={"55px"} height={"auto"} alt="" />
           </div>
-          {/* <button onClick={props.toggleFullScreen} className="fullScreen--btn">
+          <button onClick={props.toggleFullScreen} className="fullScreen--btn">
             {props.newItems.length > 0 ? (
               <span className="notification--btn">{props.newItems.length}</span>
             ) : null}
             <img src="/see_more.svg" width={"45px"} alt="" />
-          </button> */}
+          </button>
           <div className="inventory">
             <img src="/chest.svg" width={"32px"} alt="" />
             <p>{nfts.length}</p>
@@ -79,8 +78,7 @@ export default function Nav(props: {
           //     : "floorPriceInventory default"
           // }
           >
-            {Math.floor(props.tresoryData.tresory)}
-            <p>{props.tresoryData.difference}</p>
+            <p className="test"></p>
           </div>
         </div>
         <div className="nav__body">
