@@ -5,7 +5,9 @@
   color: white;
   overflow-y: scroll;
 }
-
+* {
+  scrollbar-width: 20px;
+}
 *::-webkit-scrollbar {
   width: 5px !important;
   background-color: rgb(92, 22, 197);
@@ -21,7 +23,7 @@
   border-radius: 500px !important;
 }
 
-a {
+scroll a {
   text-decoration: none;
   color: inherit;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import ExtendedNav from "./components/fullScreen/ExtendedNav/ExtendedNav";
 import Nav from "./components/fullScreen/Nav";
@@ -14,7 +14,19 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [userNfts, setUserNfts] = useState([]);
   const [userItems, setUserItems] = useState([]);
-  const [newItem, setNewItem] = useState(null);
+  const [newItems, setNewItems] = useState([]);
+  const [notification, setNotification] = useState(0);
+
+  const toggleFullScreen = useCallback(() => {
+    setIsNavFullScreen((prev) => !prev);
+  }, []);
+
+  const [tresoryData, setTresoryData] = useState({
+    tresory: 0,
+    previousTresory: 0,
+    tresoryStatus: null,
+    difference: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +57,24 @@ function App() {
         },
         (payload) => {
           const updatedItem = payload.new;
-          setNewItem(updatedItem)
+          updatedItem.date = new Date();
+          setNewItems((prevNewItems) => {
+            const updatedItems = prevNewItems.map((item) => {
+              if (item.archetypeId === updatedItem.archetypeId) {
+                return payload.new;
+              }
+              return item;
+            });
+            if (
+              !updatedItems.some(
+                (item) => item.archetypeId === updatedItem.archetypeId
+              )
+            ) {
+              updatedItems.push(updatedItem);
+              setNotification(notification + 1);
+            }
+            return updatedItems;
+          });
           setUserItems((prevItems) => {
             const indexToUpdate = prevItems.findIndex(
               (item) => item.Item.archetypeId === updatedItem.archetypeId
@@ -84,32 +113,39 @@ function App() {
     }
   }, [userData]);
 
-  const toggleFullScreen = () => {
-    setIsNavFullScreen((prev) => !prev);
-  };
-
   const [tresory, setTresory] = useState(0);
   const [previousTresory, setPreviousTresory] = useState(0);
   const [tresoryStatus, setTresoryStatus] = useState(null);
+  const [difference, setDifference] = useState(0);
+
+  console.log(tresory, previousTresory);
 
   useEffect(() => {
     let a = 0;
     for (const nft of userNfts) {
       a = a + nft.Item.floorPrice;
     }
-    setTresory(a);
-    setPreviousTresory(tresory);
-  }, [userNfts, userItems, tresory]);
+    setTresoryData((prevState) => ({
+      ...prevState,
+      tresory: a,
+      difference: a - prevState.previousTresory,
+      previousTresory: prevState.tresory,
+    }));
+  }, [userNfts]);
 
   useEffect(() => {
-    if (tresory > previousTresory) {
-      console.log("La trésorerie a augmenté");
-      setTresoryStatus(true);
-    } else if (tresory < previousTresory) {
-      console.log("La trésorerie a diminué");
-      setTresoryStatus(false);
+    if (tresoryData.tresory > tresoryData.previousTresory) {
+      setTresoryData((prevState) => ({
+        ...prevState,
+        tresoryStatus: true,
+      }));
+    } else if (tresoryData.tresory < tresoryData.previousTresory) {
+      setTresoryData((prevState) => ({
+        ...prevState,
+        tresoryStatus: false,
+      }));
     }
-  }, [tresory, previousTresory]);
+  }, []);
 
   function sortByPrice() {
     userItems.sort(function (a, b) {
@@ -117,26 +153,12 @@ function App() {
     });
   }
 
-  const [updatedItems, setUpdatedItems] = useState([])
-
-  useEffect(() => {
-    if (newItem !== null) {
-      console.log(newItem)
-      const index = updatedItems.findIndex(item => item.archetypeId === newItem.archetypeId);
-      if (index !== -1) {
-        const updatedItemsCopy = [...updatedItems];
-        updatedItemsCopy[index] = newItem;
-        setUpdatedItems(updatedItemsCopy);
-      } else {
-        setUpdatedItems((prevUpdatedItems) => [...prevUpdatedItems, newItem]);
-      }
-    }
-  }, [newItem]) 
-
-
   const handleTresoryStatusChange = (newTresoryStatus) => {
     setTimeout(() => {
-      setTresoryStatus(newTresoryStatus);
+      setTresoryData((prevState) => ({
+        ...prevState,
+        tresoryStatus: newTresoryStatus,
+      }));
     }, 2500);
   };
 
@@ -146,30 +168,40 @@ function App() {
     sortByPrice();
   }
 
+  console.log("RENDER APP");
   return (
     <div className="app">
-      {isNavFullScreen ? (
+      <Nav
+        toggleFullScreen={toggleFullScreen}
+        nfts={userNfts}
+        userItems={userItems}
+        newItems={newItems}
+        notification={notification}
+        tresoryData={tresoryData}
+      />
+      {/* {isNavFullScreen ? (
         <Nav
           toggleFullScreen={toggleFullScreen}
           nfts={userNfts}
           userItems={userItems}
-          tresory={tresory}
-          tresoryStatus={tresoryStatus}
-          onTresoryStatusChange={handleTresoryStatusChange}
+          newItems={newItems}
+          notification={notification}
+          tresoryData={tresoryData}
         />
       ) : (
         <ExtendedNav
           toggleFullScreen={toggleFullScreen}
           data={userData}
           nfts={userNfts}
-          newItem={newItem}
-          updatedItems={updatedItems}
           userItems={userItems}
           tresory={tresory}
           tresoryStatus={tresoryStatus}
           onTresoryStatusChange={handleTresoryStatusChange}
+          newItems={newItems}
+          previousTresory={previousTresory}
+          difference={difference}
         />
-      )}
+      )} */}
     </div>
   );
 }

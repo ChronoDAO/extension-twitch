@@ -3,19 +3,20 @@ import "./ExtendedNav.scss";
 import Rarity from "./components/Rarity";
 import NFT from "./components/NFT";
 import { Data, Nft } from "../../../type";
-import UpdatedDrop from "./components/UpdatedDrop";
 import UpdatedItem from "./components/UpdatedItem";
+import { CountUp } from "countup.js";
 
 export default function ExtendedNav(props: {
   toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
   data: Data;
   nfts: Nft;
-  newItem;
   userItems;
   tresory;
   tresoryStatus;
   onTresoryStatusChange;
-  updatedItems
+  newItems;
+  previousTresory;
+  difference;
 }) {
   const [rarity, setRarity] = useState<string>("");
 
@@ -24,7 +25,7 @@ export default function ExtendedNav(props: {
   };
   useEffect(() => {
     props.onTresoryStatusChange(null);
-  }, [props.tresoryStatus, props.onTresoryStatusChange]);
+  }, [props.onTresoryStatusChange]);
 
   const filteredNFTs = props.userItems.filter(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -53,15 +54,16 @@ export default function ExtendedNav(props: {
               <p>{props.nfts.length}</p>
             </div>
             <div
-              className={
-                props.tresoryStatus === true
-                  ? "floorPriceInventory increase"
-                  : props.tresoryStatus === false
-                  ? "floorPriceInventory decrease"
-                  : "floorPriceInventory default"
-              }
+            // className={
+            //   props.tresoryStatus === true
+            //     ? "floorPriceInventory increase"
+            //     : props.tresoryStatus === false
+            //     ? "floorPriceInventory decrease"
+            //     : "floorPriceInventory default"
+            // }
             >
-              $ {Math.floor(props.tresory)}
+              <p className="test">$ {Math.floor(props.tresory)}</p>
+              {props.difference !== 0 && <p>+{props.difference}</p>}
             </div>
           </div>
         </div>
@@ -69,8 +71,12 @@ export default function ExtendedNav(props: {
         <div className="extendedNav__body">
           <Rarity fromChild={handleCallBack} />
           <span className="separator"></span>
-          <UpdatedItem updatedItem={props.newItem} updatedItems={props.updatedItems}/>
-          <span className="separator"></span>
+          {props.newItems.length > 0 && (
+            <>
+              <UpdatedItem updatedItems={props.newItems} />
+              <span className="separator"></span>
+            </>
+          )}
           <div className="auto-grid">
             {rarity === ""
               ? props.userItems.map((userItem) => <NFT userItem={userItem} />)
