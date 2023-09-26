@@ -1,29 +1,42 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 import "./Nav.scss";
 import { Nft } from "../../type";
 import rarities from "../../rarities";
-import UpdatedItem from "./ExtendedNav/components/UpdatedItem";
-import { CountUp } from "countup.js";
+import CountUp from "react-countup";
 
 export default function Nav(props: {
   toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
-  nfts: Nft;
+  nfts;
   userItems;
-  tresory;
-  tresoryStatus;
-  onTresoryStatusChange;
+  tresoryData;
   newItems;
-  previousTresory;
+  inventoryCount;
 }) {
   const nfts = props.nfts;
+  const [tresory, setTresory] = useState(0);
+  const [previousTresory, setPreviousTresory] = useState(0);
+  const [difference, setDifference] = useState(0);
+  const [isShaking, setIsShaking] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    props.onTresoryStatusChange(null);
-    setTest(true);
-    setTimeout(() => {
-      setTest(false);
-    }, 500);
-  }, [props]);
+    setTresory(props.tresoryData.tresory);
+    setPreviousTresory(props.tresoryData.previousTresory);
+    setDifference(props.tresoryData.difference);
+    if (difference !== 0 && !isHovered) {
+      setIsShaking(true);
+      const timeoutId = setTimeout(() => {
+        setIsShaking(false);
+      }, 2500);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [difference, isHovered, props.tresoryData]);
+
+  const handleNavWrapperHover = () => {
+    setIsShaking(false);
+    setIsHovered(true);
+  };
 
   function groupNFTsByRarity(nfts) {
     const groupedNFTs: Record<
@@ -51,10 +64,13 @@ export default function Nav(props: {
   }
 
   const groupedNFTs = groupNFTsByRarity(nfts);
-  const [test, setTest] = useState(null);
   return (
-    <>
-      <div className={test ? "nav__wrapper notification" : "nav__wrapper"}>
+    <nav className={isShaking && !isHovered ? "notification" : null}>
+      <div
+        onMouseOver={handleNavWrapperHover}
+        onMouseLeave={() => setIsHovered(false)}
+        className={"nav__wrapper"}
+      >
         <div className="nav__header">
           <div className="logo">
             <img src="/dao.png" width={"55px"} height={"auto"} alt="" />
@@ -67,18 +83,31 @@ export default function Nav(props: {
           </button>
           <div className="inventory">
             <img src="/chest.svg" width={"32px"} alt="" />
-            <p>{nfts.length}</p>
+            <p>{props.inventoryCount}</p>
           </div>
           <div
-          // className={
-          //   props.tresoryStatus === true
-          //     ? "floorPriceInventory increase"
-          //     : props.tresoryStatus === false
-          //     ? "floorPriceInventory decrease"
-          //     : "floorPriceInventory default"
-          // }
+            className={
+              difference === 0
+                ? "floorPriceInventory default"
+                : difference < 0
+                ? "floorPriceInventory decrease"
+                : "floorPriceInventory increase"
+            }
           >
-            <p className="test"></p>
+            {previousTresory !== 0 ? (
+              <p>
+                <CountUp
+                  start={previousTresory}
+                  end={tresory}
+                  duration={2.5}
+                  separator=" "
+                  decimal=","
+                  prefix="$"
+                />
+              </p>
+            ) : (
+              <p>{Math.floor(tresory)} $</p>
+            )}
           </div>
         </div>
         <div className="nav__body">
@@ -100,6 +129,6 @@ export default function Nav(props: {
           </div>
         </div>
       </div>
-    </>
+    </nav>
   );
 }

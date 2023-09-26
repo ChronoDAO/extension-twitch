@@ -1,50 +1,49 @@
 import { useToggleShowMore } from "../../../../customHooks/useToggleShowMore";
 import "../ExtendedNav.scss";
-export default function NFT({ userItem }) {
+export default function NFT({ NFT }) {
   const { showMoreMap, toggleShowMore } = useToggleShowMore();
-
   return (
     <div>
       <div>
         <a
-          key={userItem.id}
-          href={`https://openloot.com/items/BT0/${userItem.Item.optionName}?utm_source=ambassador&utm_campaign=`}
+          key={NFT.id}
+          href={`https://openloot.com/items/BT0/${NFT.optionName}?utm_source=ambassador&utm_campaign=`}
           target="_blank"
         >
           <img
-            src={userItem.Item.imageUrl}
+            src={NFT.imageUrl}
             alt=""
-            id={!showMoreMap[userItem.id] ? userItem.Item.rarityName : "active"}
+            id={!showMoreMap[NFT.id] ? NFT.rarityName : "active"}
           />
         </a>
         <span className="NFTQuantity">
-          <p>X {userItem.count}</p>
+          <p>X {NFT.count}</p>
         </span>
         <span className="NFTIssuedId">
-          {userItem.count > 1 ? (
+          {NFT.count > 1 ? (
             <div className="issueId__container">
-              {!showMoreMap[userItem.id] ? (
-                <button onClick={() => toggleShowMore(userItem.id)}>
+              {!showMoreMap[NFT.id] ? (
+                <button onClick={() => toggleShowMore(NFT.id)}>
                   <img src="/see_more.svg" width={"18px"} alt="" />
                 </button>
               ) : (
-                <button onClick={() => toggleShowMore(userItem.id)}>
+                <button onClick={() => toggleShowMore(NFT.id)}>
                   <img src="/see_less.svg" width={"18px"} alt="" />
                 </button>
               )}
-              {showMoreMap[userItem.id] ? (
-                userItem.nft.map((nft) => <p>{nft.issuedId}</p>)
+              {showMoreMap[NFT.id] ? (
+                NFT.issuedIds.map((nft) => <p>{nft}</p>)
               ) : (
-                <p># {userItem.issuedId}</p>
+                <p># {NFT.issuedIds[0]}</p>
               )}
             </div>
           ) : (
-            <p># {userItem.issuedId}</p>
+            <p># {NFT.issuedIds[0]}</p>
           )}
         </span>
       </div>
-      <p>{userItem.Item.name}</p>
-      <p className="price">${userItem.Item.floorPrice}</p>
+      <p>{NFT.name}</p>
+      <p className="price">${NFT.floorPrice}</p>
     </div>
   );
 }

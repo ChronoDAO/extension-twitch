@@ -5,8 +5,8 @@ import Nav from "./components/fullScreen/Nav";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  "https://naiscprlenbohhfjhyhi.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5haXNjcHJsZW5ib2hoZmpoeWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE0ODc1MTMsImV4cCI6MjAwNzA2MzUxM30.fdTr5Iu8OaCTcn5Fb0IVdoh0P2YZ_VcgcYefVnG8EXI"
+  "https://mjdyahyaclvxaffhfxhu.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qZHlhaHlhY2x2eGFmZmhmeGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ4NjcwMTEsImV4cCI6MjAxMDQ0MzAxMX0.fzIPHSYCNaKIXZ3U2Nqz8l97ChfbhY_bHlG6o5vQazE"
 );
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
     const fetchData = async () => {
       try {
         const { data, error } = await supabase
-          .from("User")
+          .from("Player")
           .select("*, NFT(*, Item(*))")
           .eq("name", "Zet");
         if (error) {
@@ -68,7 +68,6 @@ function App() {
             const indexToUpdate = prevItems.findIndex(
               (item) => item.Item.archetypeId === updatedItem.archetypeId
             );
-
             if (indexToUpdate !== -1) {
               const updatedUserItems = [...prevItems];
               updatedUserItems[indexToUpdate].Item = updatedItem;
@@ -84,7 +83,7 @@ function App() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [notification, newItems]);
 
   useEffect(() => {
     if (userData) {
@@ -97,82 +96,96 @@ function App() {
         uniqueItemIds.push(item.Item.archetypeId);
         return true;
       });
-
       setUserItems(uniqueItems);
     }
-  }, [userData]);
+  }, [userData, newItems]);
+
+  const [grouped, setGrouped] = useState({});
+  const [inventoryCount, setInventoryCount] = useState(0);
+  useEffect(() => {
+    const sortedUserNfts = [...userNfts].sort((a, b) => {
+      return b.Item.floorPrice - a.Item.floorPrice;
+    });
+
+    const groupedNFTs = {};
+
+    let i = 0;
+    sortedUserNfts.forEach((nft) => {
+      const nftName = nft.Item.name;
+      if (groupedNFTs[nftName]) {
+        groupedNFTs[nftName].count += 1;
+        groupedNFTs[nftName].issuedIds.push(nft.issuedId);
+        groupedNFTs[nftName].nft = nft;
+      } else {
+        groupedNFTs[nftName] = {
+          count: 1,
+          name: nftName,
+          issuedIds: [nft.issuedId],
+          nft: nft,
+          imageUrl: nft.Item.imageUrl,
+          rarityName: nft.Item.rarityName,
+          optionName: nft.Item.optionName,
+          floorPrice: nft.Item.floorPrice,
+          id: i,
+        };
+      }
+      i++;
+    });
+    setGrouped(groupedNFTs);
+    setInventoryCount(userNfts.length);
+  }, [userNfts]);
 
   const toggleFullScreen = () => {
     setIsNavFullScreen((prev) => !prev);
   };
 
-  const [tresory, setTresory] = useState(0);
-  const [previousTresory, setPreviousTresory] = useState(0);
-  const [tresoryStatus, setTresoryStatus] = useState(null);
-  const [difference, setDifference] = useState(0);
-
+  const [tresoryData, setTresoryData] = useState({
+    tresory: 0,
+    previousTresory: 0,
+    difference: 0,
+  });
   useEffect(() => {
-    let a = 0;
-    for (const nft of userNfts) {
-      a = a + nft.Item.floorPrice;
-    }
-    setTresory(a);
-    setDifference(tresory - previousTresory);
-    setPreviousTresory(tresory);
-  }, [userNfts, userItems, tresory, previousTresory]);
+    const totalFloorPrice = userNfts.reduce(
+      (acc, nft) => acc + nft.Item.floorPrice,
+      0
+    );
+    setTresoryData((prevTresoryData) => {
+      const difference = totalFloorPrice - prevTresoryData.tresory;
 
-  useEffect(() => {
-    if (tresory > previousTresory) {
-      setTresoryStatus(true);
-    } else if (tresory < previousTresory) {
-      setTresoryStatus(false);
-    }
-  }, [tresory, previousTresory]);
-
-  function sortByPrice() {
-    userItems.sort(function (a, b) {
-      return b.Item.floorPrice - a.Item.floorPrice;
+      if (difference !== 0) {
+        const updatedTresoryData = { ...prevTresoryData };
+        updatedTresoryData.tresory = totalFloorPrice;
+        updatedTresoryData.previousTresory = prevTresoryData.tresory;
+        if (updatedTresoryData.tresory !== difference) {
+          updatedTresoryData.difference = difference;
+        }
+        return updatedTresoryData;
+      }
+      return prevTresoryData;
     });
-  }
-
-  const handleTresoryStatusChange = (newTresoryStatus) => {
-    setTimeout(() => {
-      setTresoryStatus(newTresoryStatus);
-    }, 2500);
-  };
-
-  if (!userData || !userNfts || !userItems) {
-    return null;
-  } else {
-    sortByPrice();
-  }
+  }, [userNfts, newItems]);
 
   return (
     <div className="app">
-      {isNavFullScreen ? (
+      {userData && isNavFullScreen ? (
         <Nav
           toggleFullScreen={toggleFullScreen}
           nfts={userNfts}
           userItems={userItems}
-          tresory={tresory}
-          tresoryStatus={tresoryStatus}
-          onTresoryStatusChange={handleTresoryStatusChange}
+          tresoryData={tresoryData}
           newItems={newItems}
-          notification={notification}
-          previousTresory={previousTresory}
+          inventoryCount={inventoryCount}
         />
       ) : (
         <ExtendedNav
           toggleFullScreen={toggleFullScreen}
           data={userData}
-          nfts={userNfts}
+          nfts={grouped}
           userItems={userItems}
-          tresory={tresory}
-          tresoryStatus={tresoryStatus}
-          onTresoryStatusChange={handleTresoryStatusChange}
+          tresoryData={tresoryData}
           newItems={newItems}
-          previousTresory={previousTresory}
-          difference={difference}
+          userNfts={userNfts}
+          inventoryCount={inventoryCount}
         />
       )}
     </div>

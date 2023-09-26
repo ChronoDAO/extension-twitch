@@ -20,8 +20,6 @@
   -webkit-box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
   box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
 
-
-
   button {
     border: none;
     background-color: transparent;
@@ -226,18 +224,11 @@
 
 }
 
-.active {
+#active {
   filter: brightness(.4);
   transition: .2s ease;
 }
 
-.special_IssuedId {
-  background-color: blue;
-}
-
-.inactive {
-  display: none;
-}
 
 .reel {
   --gap: 1rem;
