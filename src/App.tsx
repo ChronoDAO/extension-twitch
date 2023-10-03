@@ -4,10 +4,14 @@ import ExtendedNav from "./components/fullScreen/ExtendedNav/ExtendedNav";
 import Nav from "./components/fullScreen/Nav";
 import { createClient } from "@supabase/supabase-js";
 
+import { getAmbassadorCode, getOpenLootName } from "../src/utils/twitch";
+
+
 const supabase = createClient(
   "https://mjdyahyaclvxaffhfxhu.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qZHlhaHlhY2x2eGFmZmhmeGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ4NjcwMTEsImV4cCI6MjAxMDQ0MzAxMX0.fzIPHSYCNaKIXZ3U2Nqz8l97ChfbhY_bHlG6o5vQazE"
 );
+
 
 function App() {
   const [isNavFullScreen, setIsNavFullScreen] = useState(true);
@@ -17,13 +21,22 @@ function App() {
   const [newItems, setNewItems] = useState([]);
   const [notification, setNotification] = useState(0);
 
+  const [ambassadorCode, setAmbassadorCode] = useState("");
+  const [openLootUsername, setOpenLootUsername] = useState("");
+
+
   useEffect(() => {
+
     const fetchData = async () => {
+      let username = await getOpenLootName();
+      let code = await getAmbassadorCode();
+      setAmbassadorCode(code);
+      setOpenLootUsername(username);
       try {
         const { data, error } = await supabase
           .from("Player")
           .select("*, NFT(*, Item(*))")
-          .eq("name", "Zet");
+          .eq("name", username);
         if (error) {
           throw error;
         }
@@ -186,6 +199,7 @@ function App() {
           newItems={newItems}
           userNfts={userNfts}
           inventoryCount={inventoryCount}
+          ambassadorCode={ambassadorCode}
         />
       )}
     </div>

@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+
+<head>
+  <title>Configuration Page </title>
+
+</head>
+<body>
+  <div class="extension"> 
+    <!-- basic form that allows streamer to select which WYR options --> 
+
+    <form id = "form">
+      <fieldset style="color:white">
+
+
+
+        <legend> Extension configuration </legend> 
+
+        What is the OpenLoot account you want to display ? <br>
+        <div>
+          <input type="text" id = "openLootUsername" name="option" placeholder="OpenLoot username" checked> 
+        </div>
+        <br>
+        What is the ambassador code you want to promote ? <br>
+        <div>
+          <input type="text" id = "ambassadorCode" name="option" placeholder="Ambassador code" checked> 
+        </div>
+     
+        </fieldset> 
+        <button onclick="updateConfig()">Update </button>
+      </form>
+  </div>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  
+  <!--import extension helper library -->
     <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
-    <title>Config</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/source/config/index.tsx"></script>
-  </body>
+  
+    <script src="config.js" type="text/javascript"></script>
+
+</body>
+
 </html>

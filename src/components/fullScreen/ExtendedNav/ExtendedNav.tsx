@@ -14,6 +14,7 @@ export default function ExtendedNav(props: {
   tresoryData;
   userNfts;
   inventoryCount;
+  ambassadorCode;
 }) {
   const [rarity, setRarity] = useState<string>("");
   const [tresory, setTresory] = useState(0);
@@ -56,8 +57,8 @@ export default function ExtendedNav(props: {
                 difference === 0
                   ? "floorPriceInventory default"
                   : difference < 0
-                  ? "floorPriceInventory decrease"
-                  : "floorPriceInventory increase"
+                    ? "floorPriceInventory decrease"
+                    : "floorPriceInventory increase"
               }
             >
               {previousTresory !== 0 ? (
@@ -83,7 +84,7 @@ export default function ExtendedNav(props: {
           <span className="separator"></span>
           {props.newItems.length > 0 && (
             <>
-              <UpdatedItem updatedItems={props.newItems} />
+              <UpdatedItem updatedItems={props.newItems} ambassadorCode={props.ambassadorCode} />
               <span className="separator"></span>
             </>
           )}
@@ -91,15 +92,17 @@ export default function ExtendedNav(props: {
             {rarity === "" ? (
               Object.keys(nfts).map((i) => {
                 const group = nfts[i];
-                return <NFT key={group.name} NFT={group} />;
+                return <NFT key={group.name} NFT={group} ambassadorCode={props.ambassadorCode}
+                />;
               })
             ) : Object.values(nfts).filter(
-                (group) => group.rarityName === rarity
-              ).length > 0 ? (
+              (group) => group.rarityName === rarity
+            ).length > 0 ? (
               Object.values(nfts)
                 .filter((group) => group.rarityName === rarity)
                 .map((filteredGroup) => (
-                  <NFT key={filteredGroup.name} NFT={filteredGroup} />
+                  <NFT key={filteredGroup.name} NFT={filteredGroup} ambassadorCode={props.ambassadorCode}
+                  />
                 ))
             ) : (
               <div className="no-result">

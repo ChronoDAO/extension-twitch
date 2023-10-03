@@ -1,5 +1,16 @@
 import "../ExtendedNav.scss";
-export default function UpdatedItem({ updatedItems }) {
+
+
+import { getAmbassadorCode } from "../../../../utils/twitch";
+import { useEffect, useState } from "react";
+
+export default function UpdatedItem({ updatedItems,
+  ambassadorCode
+}) {
+
+
+
+
   updatedItems.sort(
     (itemA, itemB) => new Date(itemB.date) - new Date(itemA.date)
   );
@@ -15,7 +26,7 @@ export default function UpdatedItem({ updatedItems }) {
                   <div>
                     <a
                       key={item.id}
-                      href={`https://openloot.com/items/BT0/${item.optionName}`}
+                      href={`https://openloot.com/items/BT0/${item.optionName}?utm_source=ambassador&utm_campaign=${ambassadorCode}`}
                       target="_blank"
                     >
                       <img src={item.imageUrl} alt="" id={item.rarityName} />

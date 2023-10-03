@@ -1,13 +1,16 @@
 import { useToggleShowMore } from "../../../../customHooks/useToggleShowMore";
 import "../ExtendedNav.scss";
-export default function NFT({ NFT }) {
+import { useEffect, useState } from "react";
+
+export default function NFT({ NFT, ambassadorCode }) {
+
   const { showMoreMap, toggleShowMore } = useToggleShowMore();
   return (
     <div>
       <div>
         <a
           key={NFT.id}
-          href={`https://openloot.com/items/BT0/${NFT.optionName}?utm_source=ambassador&utm_campaign=`}
+          href={`https://openloot.com/items/BT0/${NFT.optionName}?utm_source=ambassador&utm_campaign=${ambassadorCode}`}
           target="_blank"
         >
           <img
