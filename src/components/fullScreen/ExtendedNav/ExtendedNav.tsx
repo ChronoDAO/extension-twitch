@@ -2,35 +2,35 @@ import { MouseEventHandler, useEffect, useState } from "react";
 import "./ExtendedNav.scss";
 import Rarity from "./components/Rarity";
 import NFT from "./components/NFT";
-import { Data, Nft } from "../../../type";
-import UpdatedDrop from "./components/UpdatedDrop";
 import UpdatedItem from "./components/UpdatedItem";
+import CountUp from "react-countup";
 
 export default function ExtendedNav(props: {
   toggleFullScreen: MouseEventHandler<HTMLButtonElement> | undefined;
-  data: Data;
-  nfts: Nft;
-  newItem;
+  data;
+  nfts;
   userItems;
-  tresory;
-  tresoryStatus;
-  onTresoryStatusChange;
-  updatedItems
+  newItems;
+  tresoryData;
+  userNfts;
+  inventoryCount;
+  ambassadorCode;
 }) {
   const [rarity, setRarity] = useState<string>("");
+  const [tresory, setTresory] = useState(0);
+  const [previousTresory, setPreviousTresory] = useState(0);
+  const [difference, setDifference] = useState(0);
+
+  const nfts = props.nfts;
+  useEffect(() => {
+    setTresory(props.tresoryData.tresory);
+    setPreviousTresory(props.tresoryData.previousTresory);
+    setDifference(props.tresoryData.difference);
+  }, [difference, props.tresoryData]);
 
   const handleCallBack = (childProps: string) => {
     setRarity(childProps);
   };
-  useEffect(() => {
-    props.onTresoryStatusChange(null);
-  }, [props.tresoryStatus, props.onTresoryStatusChange]);
-
-  const filteredNFTs = props.userItems.filter(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    (item) => item.Item.rarityName === rarity
-  );
 
   return (
     <>
@@ -50,18 +50,31 @@ export default function ExtendedNav(props: {
           <div>
             <div className="inventory">
               <img src="/chest.svg" width={"32px"} alt="" />{" "}
-              <p>{props.nfts.length}</p>
+              <p>{props.inventoryCount}</p>
             </div>
             <div
               className={
-                props.tresoryStatus === true
-                  ? "floorPriceInventory increase"
-                  : props.tresoryStatus === false
-                  ? "floorPriceInventory decrease"
-                  : "floorPriceInventory default"
+                difference === 0
+                  ? "floorPriceInventory default"
+                  : difference < 0
+                    ? "floorPriceInventory decrease"
+                    : "floorPriceInventory increase"
               }
             >
-              $ {Math.floor(props.tresory)}
+              {previousTresory !== 0 ? (
+                <p>
+                  <CountUp
+                    start={previousTresory}
+                    end={tresory}
+                    duration={2.5}
+                    separator=" "
+                    decimal=","
+                    prefix="$"
+                  />
+                </p>
+              ) : (
+                <p>{Math.floor(tresory)} $</p>
+              )}
             </div>
           </div>
         </div>
@@ -69,15 +82,32 @@ export default function ExtendedNav(props: {
         <div className="extendedNav__body">
           <Rarity fromChild={handleCallBack} />
           <span className="separator"></span>
-          <UpdatedItem updatedItem={props.newItem} updatedItems={props.updatedItems}/>
-          <span className="separator"></span>
+          {props.newItems.length > 0 && (
+            <>
+              <UpdatedItem updatedItems={props.newItems} ambassadorCode={props.ambassadorCode} />
+              <span className="separator"></span>
+            </>
+          )}
           <div className="auto-grid">
-            {rarity === ""
-              ? props.userItems.map((userItem) => <NFT userItem={userItem} />)
-              : filteredNFTs.map((filteredNFT) => (
-                  <NFT userItem={filteredNFT} />
-                ))}
-            {filteredNFTs.length === 0 && (
+            {rarity === "" ? (
+              Object.keys(nfts).map((i) => {
+                const group = nfts[i];
+                return <NFT key={group.name} NFT={group} ambassadorCode={props.ambassadorCode}
+                />;
+              })
+            ) : Object.values(nfts).filter(
+              //@ts-ignore
+              (group) => group.rarityName === rarity
+            ).length > 0 ? (
+              Object.values(nfts)
+                //@ts-ignore
+                .filter((group) => group.rarityName === rarity)
+                .map((filteredGroup) => (
+                  //@ts-ignore
+                  <NFT key={filteredGroup.name} NFT={filteredGroup} ambassadorCode={props.ambassadorCode}
+                  />
+                ))
+            ) : (
               <div className="no-result">
                 <p>Aucun résultat</p>
                 <button onClick={() => setRarity("")}>

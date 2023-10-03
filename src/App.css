@@ -5,7 +5,9 @@
   color: white;
   overflow-y: scroll;
 }
-
+* {
+  scrollbar-width: 20px;
+}
 *::-webkit-scrollbar {
   width: 5px !important;
   background-color: rgb(92, 22, 197);
@@ -21,32 +23,24 @@
   border-radius: 500px !important;
 }
 
-a {
+scroll a {
   text-decoration: none;
   color: inherit;
 }
 
 .increase {
-  animation: scale-up-center 0.5s ease-out 0.5s 5 alternate both, increase 2.5s;
+  animation: increase 2.5s;
 }
 
 .decrease {
-  animation: scale-up-center 0.5s ease-out 0.5s 5 alternate both, decrease 2.5s;
-}
-
-@keyframes scale-up-center {
-  0% {
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-  }
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
+  animation: decrease 2.5s;
 }
 
 @keyframes increase {
   0% {
+    color: green;
+  }
+  90% {
     color: green;
   }
   100% {
@@ -55,13 +49,13 @@ a {
 }
 
 @keyframes decrease {
-  10% {
-    color: rgb(255, 208, 0);
-  }
-  20% {
+  0% {
     color: red;
   }
   90% {
+    color: red;
+  }
+  100% {
     color: rgb(255, 208, 0);
   }
 }

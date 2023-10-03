@@ -20,8 +20,6 @@
   -webkit-box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
   box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
 
-
-
   button {
     border: none;
     background-color: transparent;
@@ -222,75 +220,103 @@
 
 
 
-  .common {
-
-    border-color: #A4B0BE
-  }
-
-  .uncommon {
-
-    border-color: #1CBF6A;
-
-  }
-
-  .rare {
-
-    border-color: #159CFD;
-
-  }
-
-  .epic {
-
-    border-color: #A369FF;
-
-  }
-
-  .legendary {
-
-    border-color: #E67E22;
-
-  }
-
-  .mythic {
-
-    border-color: #FFD32A;
-
-  }
-
-  .exalted {
-    border-color: #EF5777;
-  }
-
-  .exotic {
-
-    border-color: #FFEE00;
-
-  }
-
-  .transcendant {
-
-    border-color: #000000;
-
-  }
-
-  .unique {
-
-    border-color: #A24B72;
-
-  }
 
 
 }
 
-.active {
+#active {
   filter: brightness(.4);
   transition: .2s ease;
 }
 
-.special_IssuedId {
-  background-color: blue;
+
+.reel {
+  --gap: 1rem;
+  display: grid;
+  gap: var(--gap);
+  grid-auto-flow: column;
+  grid-auto-columns: calc(20% - (var(--gap) / 2));
+  overflow-y: scroll;
+  scroll-snap-type: x mandatory;
+  -ms-scroll-snap-type: x;
+  scroll-padding: var(--gap);
+
+  a {
+    img {
+      max-width: 150px;
+      border: 3px solid;
+      border-radius: .5rem;
+      background-color: #040816;
+      aspect-ratio: 1/1;
+      width: 100%;
+      object-fit: contain;
+      transition: .2s ease;
+
+    }
+  }
 }
 
-.inactive {
-  display: none;
+
+.reel>* {
+  scroll-snap-align: end;
+
+
+}
+
+
+#common {
+
+  border-color: #A4B0BE
+}
+
+#uncommon {
+
+  border-color: #1CBF6A;
+
+}
+
+#rare {
+
+  border-color: #159CFD;
+
+}
+
+#epic {
+
+  border-color: #A369FF;
+
+}
+
+#legendary {
+
+  border-color: #E67E22;
+
+}
+
+#mythic {
+
+  border-color: #FFD32A;
+
+}
+
+#exalted {
+  border-color: #EF5777;
+}
+
+#exotic {
+
+  border-color: #FFEE00;
+
+}
+
+#transcendant {
+
+  border-color: #000000;
+
+}
+
+#unique {
+
+  border-color: #A24B72;
+
 }

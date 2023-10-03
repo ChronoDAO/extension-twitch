@@ -15,6 +15,7 @@ export default function UpdatedDrop() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "*" },
+        //@ts-ignore
         (payload) => setData(payload.new)
       )
       .subscribe();
@@ -28,7 +29,8 @@ export default function UpdatedDrop() {
     <div>
       {data !== undefined && (
         <h1 style={{ color: "black" }}>
-          {data.toUser} à drop le nft numéro {data.nftId}
+          { //@ts-ignore 
+            data && data.toUser} à drop le nft numéro {data.nftId}
         </h1>
       )}
     </div>
