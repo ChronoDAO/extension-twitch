@@ -96,11 +96,14 @@ export default function ExtendedNav(props: {
                 />;
               })
             ) : Object.values(nfts).filter(
+              //@ts-ignore
               (group) => group.rarityName === rarity
             ).length > 0 ? (
               Object.values(nfts)
+                //@ts-ignore
                 .filter((group) => group.rarityName === rarity)
                 .map((filteredGroup) => (
+                  //@ts-ignore
                   <NFT key={filteredGroup.name} NFT={filteredGroup} ambassadorCode={props.ambassadorCode}
                   />
                 ))

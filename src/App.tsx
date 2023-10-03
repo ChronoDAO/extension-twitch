@@ -59,9 +59,11 @@ function App() {
         },
         (payload) => {
           const updatedItem = payload.new;
+          //@ts-ignore
           updatedItem.date = new Date();
           setNewItems((prevNewItems) => {
             const updatedItems = prevNewItems.map((item) => {
+              //@ts-ignore
               if (item.archetypeId === updatedItem.archetypeId) {
                 return payload.new;
               }
@@ -69,6 +71,7 @@ function App() {
             });
             if (
               !updatedItems.some(
+                //@ts-ignore
                 (item) => item.archetypeId === updatedItem.archetypeId
               )
             ) {
@@ -79,6 +82,7 @@ function App() {
           });
           setUserItems((prevItems) => {
             const indexToUpdate = prevItems.findIndex(
+              //@ts-ignore
               (item) => item.Item.archetypeId === updatedItem.archetypeId
             );
             if (indexToUpdate !== -1) {

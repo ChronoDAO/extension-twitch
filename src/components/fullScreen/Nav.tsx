@@ -90,8 +90,8 @@ export default function Nav(props: {
               difference === 0
                 ? "floorPriceInventory default"
                 : difference < 0
-                ? "floorPriceInventory decrease"
-                : "floorPriceInventory increase"
+                  ? "floorPriceInventory decrease"
+                  : "floorPriceInventory increase"
             }
           >
             {previousTresory !== 0 ? (
@@ -119,7 +119,7 @@ export default function Nav(props: {
                     <li key={groupedNFT.nft.id}>
                       <p>{groupedNFT.count}</p>
                       <svg height="20" width="20">
-                        <circle cx="10" cy="10" r="10" fill={color} />
+                        <circle cx="10" cy="10" r="10" fill={color.toString()} />
                       </svg>
                     </li>
                   ) : null

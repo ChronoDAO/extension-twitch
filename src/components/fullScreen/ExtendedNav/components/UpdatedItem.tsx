@@ -12,6 +12,7 @@ export default function UpdatedItem({ updatedItems,
 
 
   updatedItems.sort(
+    //@ts-ignore
     (itemA, itemB) => new Date(itemB.date) - new Date(itemA.date)
   );
   return (
