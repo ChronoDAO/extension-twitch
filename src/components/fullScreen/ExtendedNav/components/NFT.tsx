@@ -3,7 +3,6 @@ import "../ExtendedNav.scss";
 import { useEffect, useState } from "react";
 
 export default function NFT({ NFT, ambassadorCode }) {
-
   const { showMoreMap, toggleShowMore } = useToggleShowMore();
   return (
     <div>
@@ -45,8 +44,19 @@ export default function NFT({ NFT, ambassadorCode }) {
           )}
         </span>
       </div>
-      <p>{NFT.name}</p>
-      <p className="price">${NFT.floorPrice}</p>
+      <p className="item_name">{NFT.name}</p>
+      <p
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: ".5rem",
+        }}
+        className="price"
+      >
+        {" "}
+        {NFT.floorPrice}
+        <img src="./coin.svg" width="20px" alt="" />
+      </p>
     </div>
   );
 }

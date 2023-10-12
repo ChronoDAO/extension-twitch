@@ -31,6 +31,7 @@ export default function ExtendedNav(props: {
   const handleCallBack = (childProps: string) => {
     setRarity(childProps);
   };
+  console.log(props.newItems);
 
   return (
     <>
@@ -57,23 +58,38 @@ export default function ExtendedNav(props: {
                 difference === 0
                   ? "floorPriceInventory default"
                   : difference < 0
-                    ? "floorPriceInventory decrease"
-                    : "floorPriceInventory increase"
+                  ? "floorPriceInventory decrease"
+                  : "floorPriceInventory increase"
               }
             >
               {previousTresory !== 0 ? (
-                <p>
+                <p
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".2rem",
+                  }}
+                >
+                  <img src="./coin.svg" width="25px" alt="" />
                   <CountUp
                     start={previousTresory}
                     end={tresory}
                     duration={2.5}
                     separator=" "
                     decimal=","
-                    prefix="$"
                   />
                 </p>
               ) : (
-                <p>{Math.floor(tresory)} $</p>
+                <p
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".2rem",
+                  }}
+                >
+                  <img src="./coin.svg" width="25px" alt="" />{" "}
+                  {Math.floor(tresory)}{" "}
+                </p>
               )}
             </div>
           </div>
@@ -82,37 +98,55 @@ export default function ExtendedNav(props: {
         <div className="extendedNav__body">
           <Rarity fromChild={handleCallBack} />
           <span className="separator"></span>
-          {props.newItems.length > 0 && (
+          {props.newItems.length === 0 && (
             <>
-              <UpdatedItem updatedItems={props.newItems} ambassadorCode={props.ambassadorCode} />
-              <span className="separator"></span>
+              <UpdatedItem
+                updatedItems={props.newItems}
+                ambassadorCode={props.ambassadorCode}
+              />
+            </>
+          )}
+          {rarity !== "" && (
+            <>
+              <button
+                className="show-all--button"
+                onClick={() => setRarity("")}
+              >
+                Voir toutes la collection
+              </button>
+              <p className="result">Résultat pour {rarity.toUpperCase()} :</p>
             </>
           )}
           <div className="auto-grid">
             {rarity === "" ? (
               Object.keys(nfts).map((i) => {
                 const group = nfts[i];
-                return <NFT key={group.name} NFT={group} ambassadorCode={props.ambassadorCode}
-                />;
+                return (
+                  <NFT
+                    key={group.name}
+                    NFT={group}
+                    ambassadorCode={props.ambassadorCode}
+                  />
+                );
               })
             ) : Object.values(nfts).filter(
-              //@ts-ignore
-              (group) => group.rarityName === rarity
-            ).length > 0 ? (
+                //@ts-ignore
+                (group) => group.rarityName === rarity
+              ).length > 0 ? (
               Object.values(nfts)
                 //@ts-ignore
                 .filter((group) => group.rarityName === rarity)
                 .map((filteredGroup) => (
                   //@ts-ignore
-                  <NFT key={filteredGroup.name} NFT={filteredGroup} ambassadorCode={props.ambassadorCode}
+                  <NFT
+                    key={filteredGroup.name}
+                    NFT={filteredGroup}
+                    ambassadorCode={props.ambassadorCode}
                   />
                 ))
             ) : (
-              <div className="no-result">
+              <div className="result">
                 <p>Aucun résultat</p>
-                <button onClick={() => setRarity("")}>
-                  Voir toutes la collection
-                </button>
               </div>
             )}
           </div>

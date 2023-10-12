@@ -6,12 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 
 import { getAmbassadorCode, getOpenLootName } from "../src/utils/twitch";
 
-
 const supabase = createClient(
   "https://mjdyahyaclvxaffhfxhu.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qZHlhaHlhY2x2eGFmZmhmeGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ4NjcwMTEsImV4cCI6MjAxMDQ0MzAxMX0.fzIPHSYCNaKIXZ3U2Nqz8l97ChfbhY_bHlG6o5vQazE"
 );
-
 
 function App() {
   const [isNavFullScreen, setIsNavFullScreen] = useState(true);
@@ -24,19 +22,18 @@ function App() {
   const [ambassadorCode, setAmbassadorCode] = useState("");
   const [openLootUsername, setOpenLootUsername] = useState("");
 
-
   useEffect(() => {
-
     const fetchData = async () => {
-      let username = await getOpenLootName();
-      let code = await getAmbassadorCode();
+      // const username = await getOpenLootName();
+      // const code = await getAmbassadorCode();
+      let code = "Zet";
       setAmbassadorCode(code);
-      setOpenLootUsername(username);
+      // setOpenLootUsername(username);
       try {
         const { data, error } = await supabase
           .from("Player")
           .select("*, NFT(*, Item(*))")
-          .eq("name", username);
+          .eq("name", "Zet");
         if (error) {
           throw error;
         }
@@ -59,6 +56,7 @@ function App() {
         },
         (payload) => {
           const updatedItem = payload.new;
+          console.log(payload);
           //@ts-ignore
           updatedItem.date = new Date();
           setNewItems((prevNewItems) => {
@@ -78,7 +76,9 @@ function App() {
               updatedItems.push(updatedItem);
               setNotification(notification + 1);
             }
-            return updatedItems;
+            // const limitedItems = updatedItems.slice(0, 20);
+            // return limitedItems;
+            return updatedItems.slice(0, 20);
           });
           setUserItems((prevItems) => {
             const indexToUpdate = prevItems.findIndex(
@@ -154,6 +154,7 @@ function App() {
 
   const toggleFullScreen = () => {
     setIsNavFullScreen((prev) => !prev);
+    setNotification(0);
   };
 
   const [tresoryData, setTresoryData] = useState({
@@ -192,6 +193,7 @@ function App() {
           tresoryData={tresoryData}
           newItems={newItems}
           inventoryCount={inventoryCount}
+          lastItem={newItems[0]}
         />
       ) : (
         <ExtendedNav

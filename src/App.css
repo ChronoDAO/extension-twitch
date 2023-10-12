@@ -4,6 +4,7 @@
   justify-content: flex-end;
   color: white;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 * {
   scrollbar-width: 20px;

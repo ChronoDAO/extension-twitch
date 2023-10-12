@@ -2,18 +2,21 @@ nav {
   height: 100%;
 }
 
-.nav__wrapper:hover {
+.nav__wrapper:hover {}
+
+.nav--open {
   transform: translateX(0%);
   transition: .4s ease;
   filter: brightness(1) opacity(1);
   animation: none;
 }
 
-.nav__wrapper {
-  filter: brightness(.5) opacity(.5);
-
+.nav--close {
   transform: translateX(86%);
   transition: .5s ease;
+}
+
+.nav__wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -27,14 +30,13 @@ nav {
       rgba(166, 166, 166, 0.04) 50%,
       rgba(92, 92, 92, 0.04) 50%,
       rgba(92, 92, 92, 0.04) 100%),
-    linear-gradient(90deg, rgb(92, 22, 197), rgb(92, 22, 197));
+    linear-gradient(90deg, #2D3748, #2D3748);
   background-size: 142px 142px;
   gap: 2rem;
   font-weight: bolder;
   padding-inline: 1rem;
   -webkit-box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
   box-shadow: -4px 2px 22px 10px rgba(0, 0, 0, 0.56);
-  overflow: hidden;
 }
 
 .nav__header {
@@ -70,6 +72,20 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  p {
+    padding: .2em .5em;
+    font-size: clamp(.8rem, 2vw, 1rem);
+    border-radius: 100px;
+    border: 2px solid white;
+    color: white;
+    font-weight: bolder;
+  }
+
+  &:hover {
+    scale: 1.05;
+    transition: scale .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
 }
 
 .inventory {
@@ -121,6 +137,42 @@ nav {
 .notification :hover {
   animation: none;
 }
+
+.open-button {
+  background: linear-gradient(90deg, #384150, #384150);
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: -15px;
+  top: 50px;
+  border: 3px solid white;
+  border-radius: 50%;
+  z-index: 10000;
+  cursor: pointer;
+}
+
+.open-button::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  clip-path: polygon(30% 50%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+  transform: translate(-70%, -50%);
+}
+
+.arrow--default {
+  transform: rotateZ(180deg);
+  transition: .3s ease;
+}
+
+.arrow--rotation {
+  transform: rotateZ(0deg);
+  transition: .3s ease;
+}
+
 
 
 // @-webkit-keyframes slide-left {

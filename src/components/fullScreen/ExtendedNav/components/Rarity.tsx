@@ -19,7 +19,7 @@ export default function Rarity(props) {
                   //@ts-ignore
                   borderColor: color,
                   //@ts-ignore
-                  color: color,
+                  color: "#FFF",
                 }}
               >
                 <p> {rarity}</p>
@@ -37,7 +37,7 @@ export default function Rarity(props) {
                 onClick={() => sendData(rarity)}
                 style={{
                   //@ts-ignore
-                  color: color,
+                  color: "#FFF",
                 }}
               >
                 <p> {rarity}</p>

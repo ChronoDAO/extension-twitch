@@ -11,6 +11,7 @@ export default function Nav(props: {
   tresoryData;
   newItems;
   inventoryCount;
+  lastItems;
 }) {
   const nfts = props.nfts;
   const [tresory, setTresory] = useState(0);
@@ -19,6 +20,7 @@ export default function Nav(props: {
   const [isShaking, setIsShaking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  console.log(props.lastItems);
   useEffect(() => {
     setTresory(props.tresoryData.tresory);
     setPreviousTresory(props.tresoryData.previousTresory);
@@ -64,14 +66,27 @@ export default function Nav(props: {
   }
 
   const groupedNFTs = groupNFTsByRarity(nfts);
+
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
-    <nav className={isShaking && !isHovered ? "notification" : null}>
+    <nav className={isShaking && !isHovered && !isOpen ? "notification" : null}>
       <div
         onMouseOver={handleNavWrapperHover}
         onMouseLeave={() => setIsHovered(false)}
-        className={"nav__wrapper"}
+        className={
+          isOpen ? "nav__wrapper nav--open" : "nav__wrapper nav--close"
+        }
       >
         <div className="nav__header">
+          <span
+            className={
+              isOpen
+                ? "open-button arrow--default"
+                : "open-button arrow--rotation"
+            }
+            onClick={() => setIsOpen(!isOpen)}
+          ></span>
           <div className="logo">
             <img src="/dao.png" width={"55px"} height={"auto"} alt="" />
           </div>
@@ -79,7 +94,7 @@ export default function Nav(props: {
             {props.newItems.length > 0 ? (
               <span className="notification--btn">{props.newItems.length}</span>
             ) : null}
-            <img src="/see_more.svg" width={"45px"} alt="" />
+            <p className="see-more--button">Inventory</p>
           </button>
           <div className="inventory">
             <img src="/chest.svg" width={"32px"} alt="" />
@@ -90,23 +105,38 @@ export default function Nav(props: {
               difference === 0
                 ? "floorPriceInventory default"
                 : difference < 0
-                  ? "floorPriceInventory decrease"
-                  : "floorPriceInventory increase"
+                ? "floorPriceInventory decrease"
+                : "floorPriceInventory increase"
             }
           >
             {previousTresory !== 0 ? (
-              <p>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: ".2rem",
+                }}
+              >
+                <img src="./coin.svg" width="25px" alt="" />
                 <CountUp
                   start={previousTresory}
                   end={tresory}
                   duration={2.5}
                   separator=" "
                   decimal=","
-                  prefix="$"
                 />
               </p>
             ) : (
-              <p>{Math.floor(tresory)} $</p>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: ".2rem",
+                }}
+              >
+                <img src="./coin.svg" width="25px" alt="" />{" "}
+                {Math.floor(tresory)}{" "}
+              </p>
             )}
           </div>
         </div>
@@ -119,7 +149,12 @@ export default function Nav(props: {
                     <li key={groupedNFT.nft.id}>
                       <p>{groupedNFT.count}</p>
                       <svg height="20" width="20">
-                        <circle cx="10" cy="10" r="10" fill={color.toString()} />
+                        <circle
+                          cx="10"
+                          cy="10"
+                          r="10"
+                          fill={color.toString()}
+                        />
                       </svg>
                     </li>
                   ) : null
