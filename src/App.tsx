@@ -18,7 +18,6 @@ function App() {
   const [userItems, setUserItems] = useState([]);
   const [newItems, setNewItems] = useState([]);
   const [notification, setNotification] = useState(0);
-
   const [ambassadorCode, setAmbassadorCode] = useState("");
   const [openLootUsername, setOpenLootUsername] = useState("");
 
@@ -56,7 +55,6 @@ function App() {
         },
         (payload) => {
           const updatedItem = payload.new;
-          console.log(payload);
           //@ts-ignore
           updatedItem.date = new Date();
           setNewItems((prevNewItems) => {
@@ -74,7 +72,9 @@ function App() {
               )
             ) {
               updatedItems.push(updatedItem);
-              setNotification(notification + 1);
+              if (notification < 20) {
+                setNotification(notification + 1);
+              }
             }
             // const limitedItems = updatedItems.slice(0, 20);
             // return limitedItems;
@@ -186,15 +186,18 @@ function App() {
   return (
     <div className="app">
       {userData && isNavFullScreen ? (
-        <Nav
-          toggleFullScreen={toggleFullScreen}
-          nfts={userNfts}
-          userItems={userItems}
-          tresoryData={tresoryData}
-          newItems={newItems}
-          inventoryCount={inventoryCount}
-          lastItem={newItems[0]}
-        />
+        <>
+          <Nav
+            toggleFullScreen={toggleFullScreen}
+            nfts={userNfts}
+            userItems={userItems}
+            tresoryData={tresoryData}
+            newItems={newItems}
+            inventoryCount={inventoryCount}
+            lastItem={newItems[0]}
+            notification={notification}
+          />
+        </>
       ) : (
         <ExtendedNav
           toggleFullScreen={toggleFullScreen}
@@ -206,6 +209,7 @@ function App() {
           userNfts={userNfts}
           inventoryCount={inventoryCount}
           ambassadorCode={ambassadorCode}
+          notification={notification}
         />
       )}
     </div>

@@ -12,6 +12,7 @@ export default function Nav(props: {
   newItems;
   inventoryCount;
   lastItems;
+  notification;
 }) {
   const nfts = props.nfts;
   const [tresory, setTresory] = useState(0);
@@ -20,7 +21,6 @@ export default function Nav(props: {
   const [isShaking, setIsShaking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log(props.lastItems);
   useEffect(() => {
     setTresory(props.tresoryData.tresory);
     setPreviousTresory(props.tresoryData.previousTresory);
@@ -91,8 +91,8 @@ export default function Nav(props: {
             <img src="/dao.png" width={"55px"} height={"auto"} alt="" />
           </div>
           <button onClick={props.toggleFullScreen} className="fullScreen--btn">
-            {props.newItems.length > 0 ? (
-              <span className="notification--btn">{props.newItems.length}</span>
+            {props.notification > 0 ? (
+              <span className="notification--btn">{props.notification}</span>
             ) : null}
             <p className="see-more--button">Inventory</p>
           </button>

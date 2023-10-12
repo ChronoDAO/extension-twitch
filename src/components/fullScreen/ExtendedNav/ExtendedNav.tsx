@@ -15,7 +15,9 @@ export default function ExtendedNav(props: {
   userNfts;
   inventoryCount;
   ambassadorCode;
+  notification;
 }) {
+  console.log(props.notification);
   const [rarity, setRarity] = useState<string>("");
   const [tresory, setTresory] = useState(0);
   const [previousTresory, setPreviousTresory] = useState(0);
@@ -31,7 +33,6 @@ export default function ExtendedNav(props: {
   const handleCallBack = (childProps: string) => {
     setRarity(childProps);
   };
-  console.log(props.newItems);
 
   return (
     <>
@@ -98,11 +99,12 @@ export default function ExtendedNav(props: {
         <div className="extendedNav__body">
           <Rarity fromChild={handleCallBack} />
           <span className="separator"></span>
-          {props.newItems.length === 0 && (
+          {props.newItems.length > 0 && (
             <>
               <UpdatedItem
                 updatedItems={props.newItems}
                 ambassadorCode={props.ambassadorCode}
+                notification={props.notification}
               />
             </>
           )}

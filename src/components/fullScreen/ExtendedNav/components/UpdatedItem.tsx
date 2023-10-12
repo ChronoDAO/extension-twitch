@@ -17,7 +17,7 @@ export default function UpdatedItem({ updatedItems, ambassadorCode }) {
   return (
     <>
       <button className="toggleUpdate" onClick={toggleOpen}>
-        <p>{isOpen ? "Close" : "Open"} last update</p>
+        <p>{isOpen ? "Close" : `Open`} last update</p>
       </button>
 
       <div className={`updated-items__wrapper ${isOpen ? "open" : "close"}`}>

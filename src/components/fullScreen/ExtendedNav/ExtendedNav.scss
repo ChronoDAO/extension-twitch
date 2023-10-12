@@ -197,16 +197,18 @@
 }
 
 .updated-items__wrapper.open {
-  max-height: 1000px;
-  transition: max-height 0.3s ease-in-out;
+  opacity: 1;
+  max-height: 400px;
+  transition: 0.3s ease-in-out;
   animation: slideDown 0.3s ease-in-out;
 }
 
 .updated-items__wrapper.close {
-  overflow: hidden;
   max-height: 0;
-  transition: max-height 0.3s ease-in-out;
+  opacity: 0;
+  transition: 0.3s ease-in-out;
   animation: slideUp 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 @keyframes slideDown {
@@ -215,14 +217,13 @@
   }
 
   to {
-    max-height: 1000px;
-    /* Réglez cette valeur en fonction de la hauteur maximale souhaitée */
+    max-height: 400px;
   }
 }
 
 @keyframes slideUp {
   from {
-    max-height: 1000px;
+    max-height: 400px;
   }
 
   to {
@@ -231,15 +232,16 @@
 }
 
 .reel {
-  height: 400px;
+  height: max-content;
+  padding-bottom: 1rem;
   --gap: 1rem;
   display: grid;
   gap: var(--gap);
   grid-auto-flow: column;
   grid-auto-columns: calc(20% - (var(--gap) / 2));
-  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll;
   scroll-snap-type: x mandatory;
-  -ms-scroll-snap-type: x;
+  -ms-scroll-snap-type: x mandatory;
   scroll-padding: var(--gap);
 
   a {
