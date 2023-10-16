@@ -6,9 +6,9 @@ const rarities = {
   legendary: "#E67E22",
   mythic: "#FFD32A",
   exalted: "#EF5777",
-  exotic: "#FFEE00",
-  transcendant: "#000000",
-  unique: "#A24B72",
+  exotic: "#BE2EDD",
+  transcendent: "#FF3838",
+  unique: "#F368E0",
 };
 
 export default rarities;

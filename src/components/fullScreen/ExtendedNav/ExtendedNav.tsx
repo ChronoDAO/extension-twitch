@@ -15,7 +15,9 @@ export default function ExtendedNav(props: {
   userNfts;
   inventoryCount;
   ambassadorCode;
+  notification;
 }) {
+  console.log(props.notification);
   const [rarity, setRarity] = useState<string>("");
   const [tresory, setTresory] = useState(0);
   const [previousTresory, setPreviousTresory] = useState(0);
@@ -57,23 +59,38 @@ export default function ExtendedNav(props: {
                 difference === 0
                   ? "floorPriceInventory default"
                   : difference < 0
-                    ? "floorPriceInventory decrease"
-                    : "floorPriceInventory increase"
+                  ? "floorPriceInventory decrease"
+                  : "floorPriceInventory increase"
               }
             >
               {previousTresory !== 0 ? (
-                <p>
+                <p
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".2rem",
+                  }}
+                >
+                  <img src="./coin.svg" width="25px" alt="" />
                   <CountUp
                     start={previousTresory}
                     end={tresory}
                     duration={2.5}
                     separator=" "
                     decimal=","
-                    prefix="$"
                   />
                 </p>
               ) : (
-                <p>{Math.floor(tresory)} $</p>
+                <p
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".2rem",
+                  }}
+                >
+                  <img src="./coin.svg" width="25px" alt="" />{" "}
+                  {Math.floor(tresory)}{" "}
+                </p>
               )}
             </div>
           </div>
@@ -84,35 +101,61 @@ export default function ExtendedNav(props: {
           <span className="separator"></span>
           {props.newItems.length > 0 && (
             <>
-              <UpdatedItem updatedItems={props.newItems} ambassadorCode={props.ambassadorCode} />
-              <span className="separator"></span>
+              <UpdatedItem
+                updatedItems={props.newItems}
+                ambassadorCode={props.ambassadorCode}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-ignore
+                notification={props.notification}
+              />
+            </>
+          )}
+          {rarity !== "" && (
+            <>
+              <button
+                className="show-all--button"
+                onClick={() => setRarity("")}
+              >
+                Voir toutes la collection
+              </button>
+              <p className="result">Résultat pour {rarity.toUpperCase()} :</p>
             </>
           )}
           <div className="auto-grid">
             {rarity === "" ? (
               Object.keys(nfts).map((i) => {
                 const group = nfts[i];
-                return <NFT key={group.name} NFT={group} ambassadorCode={props.ambassadorCode}
-                />;
+                return (
+                  <NFT
+                    key={group.name}
+                    NFT={group}
+                    ambassadorCode={props.ambassadorCode}
+                  />
+                );
               })
             ) : Object.values(nfts).filter(
-              //@ts-ignore
-              (group) => group.rarityName === rarity
-            ).length > 0 ? (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-ignore
+                (group) => group.rarityName === rarity
+              ).length > 0 ? (
               Object.values(nfts)
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 //@ts-ignore
                 .filter((group) => group.rarityName === rarity)
                 .map((filteredGroup) => (
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   //@ts-ignore
-                  <NFT key={filteredGroup.name} NFT={filteredGroup} ambassadorCode={props.ambassadorCode}
+                  <NFT
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    //@ts-ignore
+                    key={filteredGroup.name}
+                    NFT={filteredGroup}
+                    ambassadorCode={props.ambassadorCode}
                   />
                 ))
             ) : (
-              <div className="no-result">
+              <div className="result">
                 <p>Aucun résultat</p>
-                <button onClick={() => setRarity("")}>
-                  Voir toutes la collection
-                </button>
               </div>
             )}
           </div>

@@ -6,12 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 
 import { getAmbassadorCode, getOpenLootName } from "../src/utils/twitch";
 
-
 const supabase = createClient(
   "https://mjdyahyaclvxaffhfxhu.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qZHlhaHlhY2x2eGFmZmhmeGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ4NjcwMTEsImV4cCI6MjAxMDQ0MzAxMX0.fzIPHSYCNaKIXZ3U2Nqz8l97ChfbhY_bHlG6o5vQazE"
 );
-
 
 function App() {
   const [isNavFullScreen, setIsNavFullScreen] = useState(true);
@@ -20,16 +18,12 @@ function App() {
   const [userItems, setUserItems] = useState([]);
   const [newItems, setNewItems] = useState([]);
   const [notification, setNotification] = useState(0);
-
   const [ambassadorCode, setAmbassadorCode] = useState("");
   const [openLootUsername, setOpenLootUsername] = useState("");
-
-
   useEffect(() => {
-
     const fetchData = async () => {
-      let username = await getOpenLootName();
-      let code = await getAmbassadorCode();
+      const username = await getOpenLootName();
+      const code = await getAmbassadorCode();
       setAmbassadorCode(code);
       setOpenLootUsername(username);
       try {
@@ -76,9 +70,13 @@ function App() {
               )
             ) {
               updatedItems.push(updatedItem);
-              setNotification(notification + 1);
+              if (notification < 20) {
+                setNotification(notification + 1);
+              }
             }
-            return updatedItems;
+            // const limitedItems = updatedItems.slice(0, 20);
+            // return limitedItems;
+            return updatedItems.slice(0, 20);
           });
           setUserItems((prevItems) => {
             const indexToUpdate = prevItems.findIndex(
@@ -154,6 +152,7 @@ function App() {
 
   const toggleFullScreen = () => {
     setIsNavFullScreen((prev) => !prev);
+    setNotification(0);
   };
 
   const [tresoryData, setTresoryData] = useState({
@@ -185,14 +184,17 @@ function App() {
   return (
     <div className="app">
       {userData && isNavFullScreen ? (
-        <Nav
-          toggleFullScreen={toggleFullScreen}
-          nfts={userNfts}
-          userItems={userItems}
-          tresoryData={tresoryData}
-          newItems={newItems}
-          inventoryCount={inventoryCount}
-        />
+        <>
+          <Nav
+            toggleFullScreen={toggleFullScreen}
+            nfts={userNfts}
+            userItems={userItems}
+            tresoryData={tresoryData}
+            newItems={newItems}
+            inventoryCount={inventoryCount}
+            notification={notification}
+          />
+        </>
       ) : (
         <ExtendedNav
           toggleFullScreen={toggleFullScreen}
@@ -204,6 +206,7 @@ function App() {
           userNfts={userNfts}
           inventoryCount={inventoryCount}
           ambassadorCode={ambassadorCode}
+          notification={notification}
         />
       )}
     </div>

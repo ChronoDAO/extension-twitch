@@ -1,45 +1,57 @@
+import React, { useEffect, useState } from "react";
 import "../ExtendedNav.scss";
-
-
 import { getAmbassadorCode } from "../../../../utils/twitch";
-import { useEffect, useState } from "react";
 
-export default function UpdatedItem({ updatedItems,
-  ambassadorCode
-}) {
-
-
-
+export default function UpdatedItem({ updatedItems, ambassadorCode }) {
+  const [isOpen, setIsOpen] = useState(false);
 
   updatedItems.sort(
     //@ts-ignore
     (itemA, itemB) => new Date(itemB.date) - new Date(itemA.date)
   );
+
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    updatedItems !== undefined && (
-      <>
-        <h3>Last updates</h3>
+    <>
+      <button className="toggleUpdate" onClick={toggleOpen}>
+        <p>{isOpen ? "Close" : `Open`} last update</p>
+      </button>
+
+      <div className={`updated-items__wrapper ${isOpen ? "open" : "close"}`}>
         <div className="reel">
           {updatedItems.length > 0 &&
             updatedItems.map((item) => (
-              <div key={item.archetypeId}>
-                <div>
+              <>
+                <div key={item.archetypeId}>
                   <div>
-                    <a
-                      key={item.id}
-                      href={`https://openloot.com/items/BT0/${item.optionName}?utm_source=ambassador&utm_campaign=${ambassadorCode}`}
-                      target="_blank"
-                    >
-                      <img src={item.imageUrl} alt="" id={item.rarityName} />
-                    </a>
+                    <div>
+                      <a
+                        key={item.id}
+                        href={`https://openloot.com/items/BT0/${item.optionName}?utm_source=ambassador&utm_campaign=${ambassadorCode}`}
+                        target="_blank"
+                      >
+                        <img src={item.imageUrl} alt="" id={item.rarityName} />
+                      </a>
+                    </div>
+                    <p className="itemName">{item.name}</p>
+                    {item.floorPrice ? (
+                      <div className="price">
+                        <p>{item.floorPrice}</p>
+                        <img src="./coin.svg" width="20px" alt="" />
+                      </div>
+                    ) : (
+                      <p>0 remaining</p>
+                    )}
                   </div>
-                  <p>{item.name}</p>
-                  <p className="price">${item.floorPrice}</p>
                 </div>
-              </div>
+              </>
             ))}
         </div>
-      </>
-    )
+      </div>
+      {isOpen && <span className="separator"></span>}
+    </>
   );
 }
