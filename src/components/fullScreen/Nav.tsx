@@ -11,7 +11,6 @@ export default function Nav(props: {
   tresoryData;
   newItems;
   inventoryCount;
-  lastItems;
   notification;
 }) {
   const nfts = props.nfts;

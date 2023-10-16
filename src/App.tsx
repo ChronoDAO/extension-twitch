@@ -19,20 +19,17 @@ function App() {
   const [newItems, setNewItems] = useState([]);
   const [notification, setNotification] = useState(0);
   const [ambassadorCode, setAmbassadorCode] = useState("");
-  const [openLootUsername, setOpenLootUsername] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      // const username = await getOpenLootName();
-      // const code = await getAmbassadorCode();
-      let code = "Zet";
+      const username = await getOpenLootName();
+      const code = await getAmbassadorCode();
       setAmbassadorCode(code);
-      // setOpenLootUsername(username);
       try {
         const { data, error } = await supabase
           .from("Player")
           .select("*, NFT(*, Item(*))")
-          .eq("name", "Zet");
+          .eq("name", username);
         if (error) {
           throw error;
         }
@@ -194,7 +191,6 @@ function App() {
             tresoryData={tresoryData}
             newItems={newItems}
             inventoryCount={inventoryCount}
-            lastItem={newItems[0]}
             notification={notification}
           />
         </>

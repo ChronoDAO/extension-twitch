@@ -104,6 +104,8 @@ export default function ExtendedNav(props: {
               <UpdatedItem
                 updatedItems={props.newItems}
                 ambassadorCode={props.ambassadorCode}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-ignore
                 notification={props.notification}
               />
             </>
@@ -132,15 +134,20 @@ export default function ExtendedNav(props: {
                 );
               })
             ) : Object.values(nfts).filter(
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 //@ts-ignore
                 (group) => group.rarityName === rarity
               ).length > 0 ? (
               Object.values(nfts)
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 //@ts-ignore
                 .filter((group) => group.rarityName === rarity)
                 .map((filteredGroup) => (
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   //@ts-ignore
                   <NFT
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    //@ts-ignore
                     key={filteredGroup.name}
                     NFT={filteredGroup}
                     ambassadorCode={props.ambassadorCode}

@@ -9,7 +9,7 @@ export default function NFT({ NFT, ambassadorCode }) {
       <div>
         <a
           key={NFT.id}
-          href={`https://openloot.com/items/BT0/${NFT.optionName}?utm_source=ambassador&utm_campaign=${ambassadorCode}`}
+          href={`http://localhost:3000/items/BT0/${NFT.optionName}`}
           target="_blank"
         >
           <img
