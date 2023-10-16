@@ -9,7 +9,7 @@ export default function NFT({ NFT, ambassadorCode }) {
       <div>
         <a
           key={NFT.id}
-          href={`http://localhost:3000/items/BT0/${NFT.optionName}`}
+          href={`https://wiki-cosmetic-next.vercel.app/items/BT0/${NFT.optionName}?utm_source=ambassador&utm_campaign=${ambassadorCode}`}
           target="_blank"
         >
           <img

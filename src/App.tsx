@@ -19,12 +19,13 @@ function App() {
   const [newItems, setNewItems] = useState([]);
   const [notification, setNotification] = useState(0);
   const [ambassadorCode, setAmbassadorCode] = useState("");
-
+  const [openLootUsername, setOpenLootUsername] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const username = await getOpenLootName();
       const code = await getAmbassadorCode();
       setAmbassadorCode(code);
+      setOpenLootUsername(username);
       try {
         const { data, error } = await supabase
           .from("Player")
