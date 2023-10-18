@@ -11,22 +11,30 @@
 
     <form id = "form">
       <fieldset style="color:white">
-
-
-
         <legend> Extension configuration </legend> 
-
         What is the OpenLoot account you want to display ? <br>
         <div>
           <input type="text" id = "openLootUsername" name="option" placeholder="OpenLoot username" checked> 
-        </div>
-        <br>
-        What is the ambassador code you want to promote ? <br>
-        <div>
-          <input type="text" id = "ambassadorCode" name="option" placeholder="Ambassador code" checked> 
-        </div>
-     
+        </div>  
         </fieldset> 
+        <br>
+        <fieldset style="color:white">
+          <legend> Ambassador Code </legend> 
+          What is the ambassador code you want to promote ? <br>
+          <div>
+            <input type="text" id = "ambassadorCode" name="option" placeholder="Ambassador code" checked> 
+          </div>
+          </fieldset> 
+          <br>
+          <fieldset style="color:white">
+            <legend> Cosmetics website </legend> 
+            What cosmetics website you want to use ? <br>
+            <div>
+              <input type="text" id = "cosmeticsWebsite" name="option" placeholder="https://cosmetics.chronodao.com" checked> 
+            </div>
+         
+            </fieldset> 
+            <br>
         <button onclick="updateConfig()">Update </button>
       </form>
   </div>
