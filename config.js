@@ -36,6 +36,7 @@ function updateConfig() {
 
     console.log("config", config);
 
+    updateCosmeticsWebsite(config.cosmeticsWebsite);
     updateCurrentOpenLootUsername(config.openLootUsername);
     updateAmbassadorCode(config.ambassadorCode);
   }
@@ -61,4 +62,8 @@ function updateCurrentOpenLootUsername(openLootUsername) {
 }
 function updateAmbassadorCode(ambassadorCode) {
   document.getElementById("ambassadorCode").value = ambassadorCode;
+}
+
+function updateCosmeticsWebsite(cosmeticsWebsite) {
+  document.getElementById("cosmeticsWebsite").value = cosmeticsWebsite;
 }

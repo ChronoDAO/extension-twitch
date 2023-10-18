@@ -29,6 +29,17 @@ export function getAmbassadorCode(): Promise<any> {
   return promise;
 }
 
+export function getCosmeticsWebsite(): Promise<any> {
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      let config = initTwitch();
+
+      resolve(config.cosmeticsWebsite.toString() || "");
+    }, 1000);
+  });
+  return promise;
+}
+
 function initTwitch() {
   //@ts-ignore
   const twitch = window.Twitch.ext;
